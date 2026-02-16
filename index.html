@@ -7,9 +7,9 @@
 
 <style>
 :root {
-  --main: #546735;
-  --sub: #f6f8ee;
-  --dark: #393939;
+  --black: #0f0f0f;
+  --gray: #e5e5e5;
+  --white: #ffffff;
 }
 
 * {
@@ -20,12 +20,13 @@
 
 body {
   font-family: Arial, sans-serif;
-  background: var(--sub);
-  color: var(--dark);
+  background: var(--white);
+  color: var(--black);
 }
 
+/* NAV */
 nav {
-  background: var(--sub);
+  background: var(--white);
   padding: 20px 40px;
   display: flex;
   justify-content: space-between;
@@ -34,54 +35,62 @@ nav {
 
 nav a {
   text-decoration: none;
-  color: var(--dark);
+  color: var(--black);
   margin-left: 30px;
   font-weight: 500;
 }
 
 nav a:hover {
-  color: var(--main);
+  opacity: 0.6;
 }
 
+/* HERO */
 .hero {
-  height: 90vh;
+  height: 100vh;
   background: url("hero.png") center/cover no-repeat;
   display: flex;
   align-items: center;
-  justify-content: center;
-  text-align: center;
+  justify-content: space-between;
+  padding: 0 80px;
   position: relative;
-}
-
-.hero::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: rgba(57,57,57,0.4);
 }
 
 .hero-content {
-  position: relative;
-  color: white;
+  max-width: 600px;
 }
 
 .hero h1 {
-  font-size: 56px;
-  margin-bottom: 16px;
+  font-size: 64px;
+  margin-bottom: 20px;
+  color: var(--white);
 }
 
 .hero p {
   font-size: 20px;
+  color: var(--white);
 }
 
+/* 오른쪽 작은 이미지 */
+.hero-side-image {
+  position: relative;
+  width: 220px;
+  transition: transform 0.1s linear;
+}
+
+.hero-side-image img {
+  width: 100%;
+  border-radius: 12px;
+}
+
+/* SECTION */
 .section {
-  padding: 100px 40px;
+  padding: 120px 60px;
+  background: var(--white);
 }
 
 .section h2 {
-  font-size: 36px;
-  margin-bottom: 40px;
-  color: var(--main);
+  font-size: 40px;
+  margin-bottom: 50px;
 }
 
 .services {
@@ -91,20 +100,20 @@ nav a:hover {
 }
 
 .card {
-  background: white;
-  padding: 30px;
-  border-radius: 12px;
+  background: var(--gray);
+  padding: 40px;
+  border-radius: 14px;
   flex: 1;
   min-width: 260px;
-  border: 1px solid var(--sub);
   transition: 0.3s ease;
 }
 
 .card:hover {
-  background: var(--main);
-  color: white;
+  background: var(--black);
+  color: var(--white);
 }
 
+/* WORK */
 .work-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -120,20 +129,26 @@ nav a:hover {
   margin-top: 12px;
 }
 
+/* CONTACT */
+#contact {
+  background: var(--gray);
+}
+
+/* FOOTER */
 footer {
-  background: var(--dark);
-  color: var(--sub);
+  background: var(--black);
+  color: var(--white);
   padding: 40px;
   text-align: center;
   font-size: 14px;
 }
 </style>
-
 </head>
+
 <body>
 
 <nav>
-  <div><strong style="color:#546735;">IN MY BACKYARD</strong></div>
+  <div><strong>IN MY BACKYARD</strong></div>
   <div>
     <a href="#about">About</a>
     <a href="#services">Services</a>
@@ -144,8 +159,12 @@ footer {
 
 <section class="hero">
   <div class="hero-content">
-    <h1></h1>
-    <p></p>
+    <h1>Creative Beyond Boundaries</h1>
+    <p>전략과 감각이 만나는 곳.</p>
+  </div>
+
+  <div class="hero-side-image" id="floatingImage">
+    <img src="side.png" alt="side visual">
   </div>
 </section>
 
@@ -201,6 +220,15 @@ footer {
 <footer>
   © 2026 IN MY BACKYARD. All rights reserved.
 </footer>
+
+<script>
+const floatingImage = document.getElementById("floatingImage");
+
+window.addEventListener("scroll", () => {
+  const scrollY = window.scrollY;
+  floatingImage.style.transform = `translateY(${scrollY * 0.2}px)`;
+});
+</script>
 
 </body>
 </html>
