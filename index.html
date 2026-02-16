@@ -5,9 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>IN MY BACKYARD</title>
 
-<!-- GOOGLE FONT -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Diphylleia&family=Fjalla+One&display=swap" rel="stylesheet">
 
 <style>
@@ -28,29 +26,26 @@ body{
 
 /* NAV */
 nav{
-  padding:30px 60px;
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
   position:fixed;
   width:100%;
   top:0;
+  display:flex;
+  justify-content:space-between;
+  padding:30px 60px;
   background:var(--black);
   z-index:1000;
 }
 
 nav a{
   text-decoration:none;
-  color:var(--white);
+  color:white;
   margin-left:40px;
   font-family:'Fjalla One',sans-serif;
   letter-spacing:2px;
   cursor:pointer;
 }
 
-nav a:hover{opacity:0.6;}
-
-/* PAGE SYSTEM */
+/* 공통 페이지 */
 .page{
   display:none;
   padding-top:120px;
@@ -61,8 +56,9 @@ nav a:hover{opacity:0.6;}
   display:block;
 }
 
-/* HERO */
-.hero{
+/* ================= PC VERSION ================= */
+
+.pc-hero{
   position:relative;
   height:170vh;
   background:url("hero.png") center top/cover no-repeat;
@@ -71,78 +67,75 @@ nav a:hover{opacity:0.6;}
 .hero-side-image{
   position:absolute;
   right:12%;
-  top:15%;
+  top:30%;
   width:260px;
   will-change:transform;
 }
 
-/* SERVICES */
-.services-wrap{
-  padding:120px 10%;
+/* ================= MOBILE VERSION ================= */
+
+.mobile-hero{
+  height:100vh;
+  background:url("hero.png") center center/cover no-repeat;
+  display:flex;
+  align-items:flex-end;
+  padding:40px;
 }
 
-.services-wrap h1{
+.mobile-title{
+  font-family:'Fjalla One',sans-serif;
+  font-size:42px;
+  line-height:1.1;
+}
+
+/* SERVICES / WORK / CONTACT 공통 */
+.section-wrap{
+  padding:120px 8%;
+}
+
+.section-wrap h1{
   font-family:'Fjalla One',sans-serif;
   font-size:48px;
   margin-bottom:60px;
 }
 
-.services-wrap p{
-  max-width:800px;
-  line-height:1.9;
-}
-
-/* WORK */
-.work-wrap{
-  padding:120px 8%;
-}
-
-.work-title{
-  font-family:'Fjalla One',sans-serif;
-  font-size:48px;
-  margin-bottom:100px;
-}
-
 .project{
-  margin-bottom:140px;
+  margin-bottom:120px;
 }
 
 .project img{
   width:100%;
-  transition:0.4s;
-  cursor:pointer;
+  margin-bottom:20px;
 }
-
-.project img:hover{opacity:0.7;}
 
 .project h2{
   font-family:'Fjalla One',sans-serif;
-  margin-top:20px;
-  font-size:28px;
 }
 
 .project p{
   color:var(--gray);
-  margin-top:10px;
 }
 
-/* CONTACT */
-.contact-wrap{
-  padding:140px 10%;
-}
+/* MOBILE 최적화 */
+@media(max-width:768px){
 
-.contact-wrap h1{
-  font-family:'Fjalla One',sans-serif;
-  font-size:48px;
-  margin-bottom:40px;
-}
+  nav{
+    padding:20px;
+  }
 
-/* FOOTER */
-footer{
-  text-align:center;
-  padding:60px;
-  font-size:14px;
-  color:var(--gray);
+  nav a{
+    margin-left:20px;
+    font-size:14px;
+  }
+
+  .section-wrap{
+    padding:100px 6%;
+  }
+
+  .section-wrap h1{
+    font-size:36px;
+  }
+
 }
 </style>
 </head>
@@ -161,29 +154,37 @@ footer{
 
 <!-- HOME -->
 <div id="home" class="page active">
-  <section class="hero">
+
+  <!-- PC HERO -->
+  <div id="pcHero" class="pc-hero">
     <img src="side.png" class="hero-side-image" id="floatingImage">
-  </section>
+  </div>
+
+  <!-- MOBILE HERO -->
+  <div id="mobileHero" class="mobile-hero">
+    <div class="mobile-title">
+      IN MY<br>BACKYARD
+    </div>
+  </div>
+
 </div>
 
 <!-- SERVICES -->
 <div id="services" class="page">
-  <div class="services-wrap">
+  <div class="section-wrap">
     <h1>SERVICES</h1>
     <p>
     우리는 브랜드의 본질을 구조화하고 서사로 만듭니다.
     전략은 감각 위에 세워지고,
     크리에이티브는 구조 위에서 완성됩니다.
-    <br><br>
-    Brand Strategy / Creative Direction / Performance Strategy
     </p>
   </div>
 </div>
 
 <!-- WORK -->
 <div id="work" class="page">
-  <div class="work-wrap">
-    <div class="work-title">WORK</div>
+  <div class="section-wrap">
+    <h1>WORK</h1>
 
     <div class="project">
       <img src="work1.png">
@@ -208,34 +209,45 @@ footer{
 
 <!-- CONTACT -->
 <div id="contact" class="page">
-  <div class="contact-wrap">
+  <div class="section-wrap">
     <h1>CONTACT</h1>
     <p>Email: hello@inmybackyard.kr</p>
   </div>
 </div>
 
-<footer>
-© 2026 IN MY BACKYARD
-</footer>
-
 <script>
 
-/* 페이지 전환 (SPA 방식) */
-function showPage(pageId){
-  document.querySelectorAll('.page').forEach(page=>{
-    page.classList.remove('active');
+/* SPA 전환 */
+function showPage(id){
+  document.querySelectorAll('.page').forEach(p=>{
+    p.classList.remove('active');
   });
-  document.getElementById(pageId).classList.add('active');
+  document.getElementById(id).classList.add('active');
   window.scrollTo(0,0);
 }
 
-/* side.png 강하게 따라오게 */
+/* 기기 감지 */
+function detectDevice(){
+  const isMobile = window.innerWidth <= 768;
+
+  document.getElementById("pcHero").style.display =
+    isMobile ? "none" : "block";
+
+  document.getElementById("mobileHero").style.display =
+    isMobile ? "flex" : "none";
+}
+
+detectDevice();
+window.addEventListener("resize", detectDevice);
+
+/* PC side.png 강한 패럴럭스 */
 const floatingImage = document.getElementById("floatingImage");
 
-window.addEventListener("scroll", () => {
-  const scrollY = window.scrollY;
-  floatingImage.style.transform =
-    `translateY(${scrollY * 0.8}px)`;
+window.addEventListener("scroll", ()=>{
+  if(window.innerWidth > 768){
+    floatingImage.style.transform =
+      `translateY(${window.scrollY * 0.8}px)`;
+  }
 });
 
 </script>
