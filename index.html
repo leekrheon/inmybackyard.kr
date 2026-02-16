@@ -1,163 +1,65 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>IN MY BACKYARD</title>
 
-<!-- Google Fonts -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Diphylleia&family=Fjalla+One&display=swap" rel="stylesheet">
 
 <style>
-
-:root {
-  --black: #0f0f0f;
-  --white: #ffffff;
-  --gray: #e5e5e5;
+:root{
+  --black:#0f0f0f;
+  --white:#ffffff;
+  --gray:#e5e5e5;
 }
 
-* {
-  margin:0;
-  padding:0;
-  box-sizing:border-box;
+*{margin:0;padding:0;box-sizing:border-box;}
+
+body{
+  background:var(--black);
+  color:var(--white);
+  font-family:'Diphylleia',serif;
 }
 
-body {
-  background: var(--black);
-  color: var(--white);
-  font-family: 'Diphylleia', serif;
-}
-
-/* NAV */
-nav {
-  padding: 30px 60px;
+nav{
+  padding:30px 60px;
   display:flex;
   justify-content:space-between;
   align-items:center;
 }
 
-nav a {
+nav a{
   text-decoration:none;
-  color: var(--white);
+  color:var(--white);
   margin-left:40px;
-  font-family:'Fjalla One', sans-serif;
-  letter-spacing:1px;
+  font-family:'Fjalla One',sans-serif;
 }
 
-nav a:hover {
-  opacity:0.6;
+nav a:hover{opacity:0.6;}
+
+.hero{
+  position:relative;
+  height:160vh;
+  background:url("hero.png") center top/cover no-repeat;
 }
 
-/* HERO */
-.hero {
-  position: relative;
-  height: 140vh;
-  background: url("hero.png") center top / cover no-repeat;
-  display:flex;
-  align-items:center;
-  padding-left:10%;
-}
-
-.hero-content h1 {
-  font-size:72px;
-  font-family:'Fjalla One', sans-serif;
-}
-
-.hero-content p {
-  margin-top:20px;
-  font-size:18px;
-}
-
-/* SIDE VISUAL */
-.hero-side-image {
-  position: absolute;
-  right: 12%;
-  top: 30%;
-  width: 260px;
-  will-change: transform;
-}
-
-/* SECTION */
-.section {
-  padding:140px 10%;
-}
-
-.section h2 {
-  font-family:'Fjalla One', sans-serif;
-  font-size:48px;
-  margin-bottom:60px;
-}
-
-/* SERVICES */
-.services-grid {
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(300px,1fr));
-  gap:60px;
-}
-
-.service-item h3 {
-  font-family:'Fjalla One', sans-serif;
-  margin-bottom:15px;
-}
-
-/* WORK */
-.work-grid {
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(300px,1fr));
-  gap:40px;
-}
-
-.work-item {
-  cursor:pointer;
-}
-
-.work-item img {
-  width:100%;
-  transition:0.4s;
-}
-
-.work-item img:hover {
-  opacity:0.7;
-}
-
-/* MODAL */
-.modal {
-  position:fixed;
-  inset:0;
-  background:rgba(0,0,0,0.9);
-  display:none;
-  justify-content:center;
-  align-items:center;
-  padding:40px;
-}
-
-.modal-content {
-  max-width:800px;
-}
-
-.modal h3 {
-  font-family:'Fjalla One', sans-serif;
-  margin-bottom:20px;
-}
-
-.close-btn {
+.hero-side-image{
   position:absolute;
-  top:40px;
-  right:60px;
-  font-size:24px;
-  cursor:pointer;
+  right:12%;
+  top:30%;
+  width:260px;
+  will-change:transform;
 }
 
-/* FOOTER */
-footer {
+footer{
   padding:60px;
   text-align:center;
-  color: var(--gray);
+  color:var(--gray);
   font-size:14px;
 }
-
 </style>
 </head>
 
@@ -166,97 +68,28 @@ footer {
 <nav>
   <div style="font-family:'Fjalla One',sans-serif;">IN MY BACKYARD</div>
   <div>
-    <a href="#services">Services</a>
-    <a href="#work">Work</a>
-    <a href="#contact">Contact</a>
+    <a href="services.html">Services</a>
+    <a href="work.html">Work</a>
+    <a href="contact.html">Contact</a>
   </div>
 </nav>
 
-<!-- HERO -->
 <section class="hero">
-  <div class="hero-content">
-    <h1>CREATIVE<br>STUDIO</h1>
-    <p>We build identity beyond visuals.</p>
-  </div>
   <img src="side.png" class="hero-side-image" id="floatingImage">
-</section>
-
-<!-- SERVICES -->
-<section id="services" class="section">
-  <h2>Services</h2>
-  <div class="services-grid">
-    <div class="service-item">
-      <h3>Brand Philosophy</h3>
-      <p>우리는 브랜드의 본질을 구조화하고 서사로 만듭니다.</p>
-    </div>
-    <div class="service-item">
-      <h3>Creative Direction</h3>
-      <p>비주얼과 메시지를 통합 설계합니다.</p>
-    </div>
-    <div class="service-item">
-      <h3>Performance Strategy</h3>
-      <p>데이터 기반의 확장 전략을 만듭니다.</p>
-    </div>
-  </div>
-</section>
-
-<!-- WORK -->
-<section id="work" class="section">
-  <h2>Work</h2>
-  <div class="work-grid">
-    <div class="work-item" onclick="openModal('Project 01','이 프로젝트의 상세 설명을 여기에 작성하세요.')">
-      <img src="work1.png">
-    </div>
-    <div class="work-item" onclick="openModal('Project 02','브랜드 전략과 제작 과정 설명.')">
-      <img src="work2.png">
-    </div>
-    <div class="work-item" onclick="openModal('Project 03','성과 및 결과 설명.')">
-      <img src="work3.png">
-    </div>
-  </div>
-</section>
-
-<!-- CONTACT -->
-<section id="contact" class="section">
-  <h2>Contact</h2>
-  <p>Email: hello@inmybackyard.kr</p>
 </section>
 
 <footer>
 © 2026 IN MY BACKYARD
 </footer>
 
-<!-- MODAL -->
-<div class="modal" id="modal">
-  <div class="close-btn" onclick="closeModal()">X</div>
-  <div class="modal-content">
-    <h3 id="modalTitle"></h3>
-    <p id="modalText"></p>
-  </div>
-</div>
-
 <script>
-
-/* SCROLL FOLLOW EFFECT */
 const floatingImage = document.getElementById("floatingImage");
 
 window.addEventListener("scroll", () => {
   const scrollY = window.scrollY;
   floatingImage.style.transform =
-    `translateY(${scrollY * 0.25}px)`;
+    `translateY(${scrollY * 0.6}px)`; /* 더 적극적으로 */
 });
-
-/* MODAL FUNCTION */
-function openModal(title, text) {
-  document.getElementById("modal").style.display = "flex";
-  document.getElementById("modalTitle").innerText = title;
-  document.getElementById("modalText").innerText = text;
-}
-
-function closeModal() {
-  document.getElementById("modal").style.display = "none";
-}
-
 </script>
 
 </body>
