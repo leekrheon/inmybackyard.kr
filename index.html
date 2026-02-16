@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>IN MY BACKYARD</title>
 
+<!-- GOOGLE FONT -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Diphylleia&family=Fjalla+One&display=swap" rel="stylesheet">
@@ -22,13 +23,20 @@ body{
   background:var(--black);
   color:var(--white);
   font-family:'Diphylleia',serif;
+  overflow-x:hidden;
 }
 
+/* NAV */
 nav{
   padding:30px 60px;
   display:flex;
   justify-content:space-between;
   align-items:center;
+  position:fixed;
+  width:100%;
+  top:0;
+  background:var(--black);
+  z-index:1000;
 }
 
 nav a{
@@ -36,13 +44,27 @@ nav a{
   color:var(--white);
   margin-left:40px;
   font-family:'Fjalla One',sans-serif;
+  letter-spacing:2px;
+  cursor:pointer;
 }
 
 nav a:hover{opacity:0.6;}
 
+/* PAGE SYSTEM */
+.page{
+  display:none;
+  padding-top:120px;
+  min-height:100vh;
+}
+
+.page.active{
+  display:block;
+}
+
+/* HERO */
 .hero{
   position:relative;
-  height:160vh;
+  height:170vh;
   background:url("hero.png") center top/cover no-repeat;
 }
 
@@ -54,11 +76,73 @@ nav a:hover{opacity:0.6;}
   will-change:transform;
 }
 
-footer{
-  padding:60px;
-  text-align:center;
+/* SERVICES */
+.services-wrap{
+  padding:120px 10%;
+}
+
+.services-wrap h1{
+  font-family:'Fjalla One',sans-serif;
+  font-size:48px;
+  margin-bottom:60px;
+}
+
+.services-wrap p{
+  max-width:800px;
+  line-height:1.9;
+}
+
+/* WORK */
+.work-wrap{
+  padding:120px 8%;
+}
+
+.work-title{
+  font-family:'Fjalla One',sans-serif;
+  font-size:48px;
+  margin-bottom:100px;
+}
+
+.project{
+  margin-bottom:140px;
+}
+
+.project img{
+  width:100%;
+  transition:0.4s;
+  cursor:pointer;
+}
+
+.project img:hover{opacity:0.7;}
+
+.project h2{
+  font-family:'Fjalla One',sans-serif;
+  margin-top:20px;
+  font-size:28px;
+}
+
+.project p{
   color:var(--gray);
+  margin-top:10px;
+}
+
+/* CONTACT */
+.contact-wrap{
+  padding:140px 10%;
+}
+
+.contact-wrap h1{
+  font-family:'Fjalla One',sans-serif;
+  font-size:48px;
+  margin-bottom:40px;
+}
+
+/* FOOTER */
+footer{
+  text-align:center;
+  padding:60px;
   font-size:14px;
+  color:var(--gray);
 }
 </style>
 </head>
@@ -68,28 +152,92 @@ footer{
 <nav>
   <div style="font-family:'Fjalla One',sans-serif;">IN MY BACKYARD</div>
   <div>
-    <a href="services.html">Services</a>
-    <a href="work.html">Work</a>
-    <a href="contact.html">Contact</a>
+    <a onclick="showPage('home')">HOME</a>
+    <a onclick="showPage('services')">SERVICES</a>
+    <a onclick="showPage('work')">WORK</a>
+    <a onclick="showPage('contact')">CONTACT</a>
   </div>
 </nav>
 
-<section class="hero">
-  <img src="side.png" class="hero-side-image" id="floatingImage">
-</section>
+<!-- HOME -->
+<div id="home" class="page active">
+  <section class="hero">
+    <img src="side.png" class="hero-side-image" id="floatingImage">
+  </section>
+</div>
+
+<!-- SERVICES -->
+<div id="services" class="page">
+  <div class="services-wrap">
+    <h1>SERVICES</h1>
+    <p>
+    우리는 브랜드의 본질을 구조화하고 서사로 만듭니다.
+    전략은 감각 위에 세워지고,
+    크리에이티브는 구조 위에서 완성됩니다.
+    <br><br>
+    Brand Strategy / Creative Direction / Performance Strategy
+    </p>
+  </div>
+</div>
+
+<!-- WORK -->
+<div id="work" class="page">
+  <div class="work-wrap">
+    <div class="work-title">WORK</div>
+
+    <div class="project">
+      <img src="work1.png">
+      <h2>Project 01</h2>
+      <p>Brand Identity / 2026</p>
+    </div>
+
+    <div class="project">
+      <img src="work2.png">
+      <h2>Project 02</h2>
+      <p>Campaign / 2026</p>
+    </div>
+
+    <div class="project">
+      <img src="work3.png">
+      <h2>Project 03</h2>
+      <p>Performance / 2026</p>
+    </div>
+
+  </div>
+</div>
+
+<!-- CONTACT -->
+<div id="contact" class="page">
+  <div class="contact-wrap">
+    <h1>CONTACT</h1>
+    <p>Email: hello@inmybackyard.kr</p>
+  </div>
+</div>
 
 <footer>
 © 2026 IN MY BACKYARD
 </footer>
 
 <script>
+
+/* 페이지 전환 (SPA 방식) */
+function showPage(pageId){
+  document.querySelectorAll('.page').forEach(page=>{
+    page.classList.remove('active');
+  });
+  document.getElementById(pageId).classList.add('active');
+  window.scrollTo(0,0);
+}
+
+/* side.png 강하게 따라오게 */
 const floatingImage = document.getElementById("floatingImage");
 
 window.addEventListener("scroll", () => {
   const scrollY = window.scrollY;
   floatingImage.style.transform =
-    `translateY(${scrollY * 0.6}px)`; /* 더 적극적으로 */
+    `translateY(${scrollY * 0.8}px)`;
 });
+
 </script>
 
 </body>
