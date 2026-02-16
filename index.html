@@ -5,6 +5,11 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>IN MY BACKYARD</title>
 
+<!-- Google Font -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fjalla+One&display=swap" rel="stylesheet">
+
 <style>
 :root {
   --black: #0f0f0f;
@@ -19,10 +24,17 @@
 }
 
 body {
-  font-family: Arial, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo",
+               "Noto Sans KR", sans-serif;
   background: var(--black);
   color: var(--white);
   overflow-x: hidden;
+}
+
+/* 영어 텍스트 전역 지정 */
+.en {
+  font-family: 'Fjalla One', sans-serif;
+  letter-spacing: 1px;
 }
 
 /* NAV */
@@ -38,11 +50,16 @@ nav {
   z-index: 1000;
 }
 
+nav strong {
+  font-family: 'Fjalla One', sans-serif;
+  font-size: 20px;
+}
+
 nav a {
   text-decoration: none;
   color: var(--white);
   margin-left: 40px;
-  font-weight: 500;
+  font-family: 'Fjalla One', sans-serif;
   cursor: pointer;
 }
 
@@ -77,11 +94,14 @@ nav a:hover {
 }
 
 .hero h1 {
-  font-size: 72px;
+  font-family: 'Fjalla One', sans-serif;
+  font-size: 80px;
   margin-bottom: 24px;
+  line-height: 1.1;
 }
 
 .hero p {
+  font-family: 'Fjalla One', sans-serif;
   font-size: 22px;
   color: var(--gray);
 }
@@ -98,12 +118,13 @@ nav a:hover {
   border-radius: 12px;
 }
 
-/* SERVICES PAGE */
+/* SERVICES */
 .services-page {
   padding: 120px 100px;
 }
 
 .services-page h1 {
+  font-family: 'Fjalla One', sans-serif;
   font-size: 64px;
   margin-bottom: 40px;
 }
@@ -115,7 +136,7 @@ nav a:hover {
   font-size: 18px;
 }
 
-/* WORK PAGE */
+/* WORK */
 .work-page {
   background: var(--white);
   color: var(--black);
@@ -123,22 +144,13 @@ nav a:hover {
 }
 
 .work-page h1 {
+  font-family: 'Fjalla One', sans-serif;
   font-size: 64px;
   margin-bottom: 60px;
 }
 
-.work-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-  gap: 40px;
-}
-
-.work-item img {
-  width: 100%;
-  border-radius: 12px;
-}
-
 .work-item h3 {
+  font-family: 'Fjalla One', sans-serif;
   margin-top: 16px;
 }
 
@@ -148,11 +160,13 @@ nav a:hover {
 }
 
 .contact-page h1 {
+  font-family: 'Fjalla One', sans-serif;
   font-size: 60px;
   margin-bottom: 40px;
 }
 
 .contact-page p {
+  font-family: 'Fjalla One', sans-serif;
   font-size: 20px;
   color: var(--gray);
 }
@@ -164,10 +178,10 @@ nav a:hover {
 <nav>
   <div><strong>IN MY BACKYARD</strong></div>
   <div>
-    <a onclick="showPage('home')">Home</a>
-    <a onclick="showPage('services')">Services</a>
-    <a onclick="showPage('work')">Work</a>
-    <a onclick="showPage('contact')">Contact</a>
+    <a onclick="showPage('home')">HOME</a>
+    <a onclick="showPage('services')">SERVICES</a>
+    <a onclick="showPage('work')">WORK</a>
+    <a onclick="showPage('contact')">CONTACT</a>
   </div>
 </nav>
 
@@ -175,8 +189,8 @@ nav a:hover {
 <div id="home" class="page active">
   <section class="hero">
     <div class="hero-content">
-      <h1>Creative<br>in Depth</h1>
-      <p>전략은 깊게. 크리에이티브는 더 깊게.</p>
+      <h1>CREATIVE<br>IN DEPTH</h1>
+      <p>STRATEGY DRIVEN STUDIO</p>
     </div>
     <div class="hero-side-image" id="floatingImage">
       <img src="side.png" alt="side visual">
@@ -186,7 +200,7 @@ nav a:hover {
 
 <!-- SERVICES -->
 <div id="services" class="page services-page">
-  <h1>Our Philosophy</h1>
+  <h1>OUR PHILOSOPHY</h1>
   <p>
   우리는 겉으로 보이는 광고를 만들지 않습니다.
   우리는 브랜드의 구조를 설계합니다.
@@ -197,27 +211,27 @@ nav a:hover {
 
 <!-- WORK -->
 <div id="work" class="page work-page">
-  <h1>Work</h1>
+  <h1>WORK</h1>
   <div class="work-grid">
     <div class="work-item">
       <img src="work1.jpg">
-      <h3>Project 01</h3>
+      <h3>PROJECT 01</h3>
     </div>
     <div class="work-item">
       <img src="work2.jpg">
-      <h3>Project 02</h3>
+      <h3>PROJECT 02</h3>
     </div>
     <div class="work-item">
       <img src="work3.jpg">
-      <h3>Project 03</h3>
+      <h3>PROJECT 03</h3>
     </div>
   </div>
 </div>
 
 <!-- CONTACT -->
 <div id="contact" class="page contact-page">
-  <h1>Contact</h1>
-  <p>hello@inmybackyard.kr</p>
+  <h1>CONTACT</h1>
+  <p>HELLO@INMYBACKYARD.KR</p>
 </div>
 
 <script>
@@ -228,7 +242,6 @@ function showPage(pageId) {
   history.pushState(null, null, '#' + pageId);
 }
 
-/* 더 자연스러운 스크롤 추적 */
 const floatingImage = document.getElementById("floatingImage");
 
 window.addEventListener("scroll", () => {
