@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>IN MY BACKYARD | Creative Agency</title>
+<title>IN MY BACKYARD</title>
 
 <style>
 :root {
@@ -20,38 +20,55 @@
 
 body {
   font-family: Arial, sans-serif;
-  background: var(--white);
-  color: var(--black);
+  background: var(--black);
+  color: var(--white);
+  overflow-x: hidden;
 }
 
 /* NAV */
 nav {
-  background: var(--white);
-  padding: 20px 40px;
+  background: var(--black);
+  padding: 24px 60px;
   display: flex;
   justify-content: space-between;
   align-items: center;
+  position: fixed;
+  width: 100%;
+  top: 0;
+  z-index: 1000;
 }
 
 nav a {
   text-decoration: none;
-  color: var(--black);
-  margin-left: 30px;
+  color: var(--white);
+  margin-left: 40px;
   font-weight: 500;
+  cursor: pointer;
 }
 
 nav a:hover {
   opacity: 0.6;
 }
 
+/* PAGE SYSTEM */
+.page {
+  display: none;
+  min-height: 100vh;
+  padding-top: 120px;
+}
+
+.page.active {
+  display: block;
+}
+
 /* HERO */
 .hero {
-  height: 100vh;
-  background: url("hero.png") center/cover no-repeat;
+  height: 160vh;
+  background: url("hero.png") center top / cover no-repeat;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 80px;
+  padding: 0 100px;
   position: relative;
 }
 
@@ -60,21 +77,20 @@ nav a:hover {
 }
 
 .hero h1 {
-  font-size: 64px;
-  margin-bottom: 20px;
-  color: var(--white);
+  font-size: 72px;
+  margin-bottom: 24px;
 }
 
 .hero p {
-  font-size: 20px;
-  color: var(--white);
+  font-size: 22px;
+  color: var(--gray);
 }
 
-/* 오른쪽 작은 이미지 */
+/* side visual */
 .hero-side-image {
   position: relative;
-  width: 220px;
-  transition: transform 0.1s linear;
+  width: 260px;
+  will-change: transform;
 }
 
 .hero-side-image img {
@@ -82,65 +98,63 @@ nav a:hover {
   border-radius: 12px;
 }
 
-/* SECTION */
-.section {
-  padding: 120px 60px;
+/* SERVICES PAGE */
+.services-page {
+  padding: 120px 100px;
+}
+
+.services-page h1 {
+  font-size: 64px;
+  margin-bottom: 40px;
+}
+
+.services-page p {
+  max-width: 800px;
+  line-height: 1.8;
+  color: var(--gray);
+  font-size: 18px;
+}
+
+/* WORK PAGE */
+.work-page {
   background: var(--white);
+  color: var(--black);
+  padding: 120px 100px;
 }
 
-.section h2 {
-  font-size: 40px;
-  margin-bottom: 50px;
+.work-page h1 {
+  font-size: 64px;
+  margin-bottom: 60px;
 }
 
-.services {
-  display: flex;
-  gap: 40px;
-  flex-wrap: wrap;
-}
-
-.card {
-  background: var(--gray);
-  padding: 40px;
-  border-radius: 14px;
-  flex: 1;
-  min-width: 260px;
-  transition: 0.3s ease;
-}
-
-.card:hover {
-  background: var(--black);
-  color: var(--white);
-}
-
-/* WORK */
 .work-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 30px;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 40px;
 }
 
 .work-item img {
   width: 100%;
-  border-radius: 10px;
+  border-radius: 12px;
 }
 
-.work-item h4 {
-  margin-top: 12px;
+.work-item h3 {
+  margin-top: 16px;
 }
 
 /* CONTACT */
-#contact {
-  background: var(--gray);
+.contact-page {
+  padding: 120px 100px;
 }
 
-/* FOOTER */
-footer {
-  background: var(--black);
-  color: var(--white);
-  padding: 40px;
-  text-align: center;
-  font-size: 14px;
+.contact-page h1 {
+  font-size: 60px;
+  margin-bottom: 40px;
+}
+
+.contact-page p {
+  font-size: 20px;
+  color: var(--gray);
 }
 </style>
 </head>
@@ -150,83 +164,79 @@ footer {
 <nav>
   <div><strong>IN MY BACKYARD</strong></div>
   <div>
-    <a href="#about">About</a>
-    <a href="#services">Services</a>
-    <a href="#work">Work</a>
-    <a href="#contact">Contact</a>
+    <a onclick="showPage('home')">Home</a>
+    <a onclick="showPage('services')">Services</a>
+    <a onclick="showPage('work')">Work</a>
+    <a onclick="showPage('contact')">Contact</a>
   </div>
 </nav>
 
-<section class="hero">
-  <div class="hero-content">
-    <h1>Creative Beyond Boundaries</h1>
-    <p>전략과 감각이 만나는 곳.</p>
-  </div>
+<!-- HOME -->
+<div id="home" class="page active">
+  <section class="hero">
+    <div class="hero-content">
+      <h1>Creative<br>in Depth</h1>
+      <p>전략은 깊게. 크리에이티브는 더 깊게.</p>
+    </div>
+    <div class="hero-side-image" id="floatingImage">
+      <img src="side.png" alt="side visual">
+    </div>
+  </section>
+</div>
 
-  <div class="hero-side-image" id="floatingImage">
-    <img src="side.png" alt="side visual">
-  </div>
-</section>
-
-<section id="about" class="section">
-  <h2>About</h2>
-  <p style="max-width:800px; line-height:1.6;">
-    우리는 전략 기반의 크리에이티브 에이전시입니다.
-    브랜드의 본질을 발견하고, 가장 적합한 방식으로 세상과 연결합니다.
+<!-- SERVICES -->
+<div id="services" class="page services-page">
+  <h1>Our Philosophy</h1>
+  <p>
+  우리는 겉으로 보이는 광고를 만들지 않습니다.
+  우리는 브랜드의 구조를 설계합니다.
+  전략 없는 크리에이티브는 소음이고,
+  철학 없는 전략은 방향을 잃습니다.
   </p>
-</section>
+</div>
 
-<section id="services" class="section">
-  <h2>Services</h2>
-  <div class="services">
-    <div class="card">
-      <h3>Brand Strategy</h3>
-      <p>시장 분석과 포지셔닝 전략 수립</p>
-    </div>
-    <div class="card">
-      <h3>Creative</h3>
-      <p>영상·그래픽·카피 제작</p>
-    </div>
-    <div class="card">
-      <h3>Performance</h3>
-      <p>디지털 광고 집행 및 데이터 분석</p>
-    </div>
-  </div>
-</section>
-
-<section id="work" class="section">
-  <h2>Work</h2>
+<!-- WORK -->
+<div id="work" class="page work-page">
+  <h1>Work</h1>
   <div class="work-grid">
     <div class="work-item">
-      <img src="work1.jpg" alt="work1">
-      <h4>Project 01</h4>
+      <img src="work1.jpg">
+      <h3>Project 01</h3>
     </div>
     <div class="work-item">
-      <img src="work2.jpg" alt="work2">
-      <h4>Project 02</h4>
+      <img src="work2.jpg">
+      <h3>Project 02</h3>
     </div>
     <div class="work-item">
-      <img src="work3.jpg" alt="work3">
-      <h4>Project 03</h4>
+      <img src="work3.jpg">
+      <h3>Project 03</h3>
     </div>
   </div>
-</section>
+</div>
 
-<section id="contact" class="section">
-  <h2>Contact</h2>
-  <p>Email: hello@inmybackyard.kr</p>
-</section>
-
-<footer>
-  © 2026 IN MY BACKYARD. All rights reserved.
-</footer>
+<!-- CONTACT -->
+<div id="contact" class="page contact-page">
+  <h1>Contact</h1>
+  <p>hello@inmybackyard.kr</p>
+</div>
 
 <script>
+function showPage(pageId) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById(pageId).classList.add('active');
+  window.scrollTo(0, 0);
+  history.pushState(null, null, '#' + pageId);
+}
+
+/* 더 자연스러운 스크롤 추적 */
 const floatingImage = document.getElementById("floatingImage");
 
 window.addEventListener("scroll", () => {
   const scrollY = window.scrollY;
-  floatingImage.style.transform = `translateY(${scrollY * 0.2}px)`;
+  if (floatingImage) {
+    floatingImage.style.transform =
+      `translateY(${scrollY * 0.4}px)`;
+  }
 });
 </script>
 
