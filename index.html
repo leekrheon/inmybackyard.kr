@@ -5,252 +5,258 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>IN MY BACKYARD</title>
 
-<!-- Google Font -->
+<!-- Google Fonts -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fjalla+One&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Diphylleia&family=Fjalla+One&display=swap" rel="stylesheet">
 
 <style>
+
 :root {
   --black: #0f0f0f;
-  --gray: #e5e5e5;
   --white: #ffffff;
+  --gray: #e5e5e5;
 }
 
 * {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
 }
 
 body {
-  font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo",
-               "Noto Sans KR", sans-serif;
   background: var(--black);
   color: var(--white);
-  overflow-x: hidden;
-}
-
-/* 영어 텍스트 전역 지정 */
-.en {
-  font-family: 'Fjalla One', sans-serif;
-  letter-spacing: 1px;
+  font-family: 'Diphylleia', serif;
 }
 
 /* NAV */
 nav {
-  background: var(--black);
-  padding: 24px 60px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  position: fixed;
-  width: 100%;
-  top: 0;
-  z-index: 1000;
-}
-
-nav strong {
-  font-family: 'Fjalla One', sans-serif;
-  font-size: 20px;
+  padding: 30px 60px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
 }
 
 nav a {
-  text-decoration: none;
+  text-decoration:none;
   color: var(--white);
-  margin-left: 40px;
-  font-family: 'Fjalla One', sans-serif;
-  cursor: pointer;
+  margin-left:40px;
+  font-family:'Fjalla One', sans-serif;
+  letter-spacing:1px;
 }
 
 nav a:hover {
-  opacity: 0.6;
-}
-
-/* PAGE SYSTEM */
-.page {
-  display: none;
-  min-height: 100vh;
-  padding-top: 120px;
-}
-
-.page.active {
-  display: block;
+  opacity:0.6;
 }
 
 /* HERO */
 .hero {
-  height: 160vh;
+  position: relative;
+  height: 140vh;
   background: url("hero.png") center top / cover no-repeat;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0 100px;
-  position: relative;
+  display:flex;
+  align-items:center;
+  padding-left:10%;
 }
 
-.hero-content {
-  max-width: 600px;
+.hero-content h1 {
+  font-size:72px;
+  font-family:'Fjalla One', sans-serif;
 }
 
-.hero h1 {
-  font-family: 'Fjalla One', sans-serif;
-  font-size: 80px;
-  margin-bottom: 24px;
-  line-height: 1.1;
+.hero-content p {
+  margin-top:20px;
+  font-size:18px;
 }
 
-.hero p {
-  font-family: 'Fjalla One', sans-serif;
-  font-size: 22px;
-  color: var(--gray);
-}
-
-/* side visual */
+/* SIDE VISUAL */
 .hero-side-image {
-  position: relative;
+  position: absolute;
+  right: 12%;
+  top: 30%;
   width: 260px;
   will-change: transform;
 }
 
-.hero-side-image img {
-  width: 100%;
-  border-radius: 12px;
+/* SECTION */
+.section {
+  padding:140px 10%;
+}
+
+.section h2 {
+  font-family:'Fjalla One', sans-serif;
+  font-size:48px;
+  margin-bottom:60px;
 }
 
 /* SERVICES */
-.services-page {
-  padding: 120px 100px;
+.services-grid {
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(300px,1fr));
+  gap:60px;
 }
 
-.services-page h1 {
-  font-family: 'Fjalla One', sans-serif;
-  font-size: 64px;
-  margin-bottom: 40px;
-}
-
-.services-page p {
-  max-width: 800px;
-  line-height: 1.8;
-  color: var(--gray);
-  font-size: 18px;
+.service-item h3 {
+  font-family:'Fjalla One', sans-serif;
+  margin-bottom:15px;
 }
 
 /* WORK */
-.work-page {
-  background: var(--white);
-  color: var(--black);
-  padding: 120px 100px;
+.work-grid {
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(300px,1fr));
+  gap:40px;
 }
 
-.work-page h1 {
-  font-family: 'Fjalla One', sans-serif;
-  font-size: 64px;
-  margin-bottom: 60px;
+.work-item {
+  cursor:pointer;
 }
 
-.work-item h3 {
-  font-family: 'Fjalla One', sans-serif;
-  margin-top: 16px;
+.work-item img {
+  width:100%;
+  transition:0.4s;
 }
 
-/* CONTACT */
-.contact-page {
-  padding: 120px 100px;
+.work-item img:hover {
+  opacity:0.7;
 }
 
-.contact-page h1 {
-  font-family: 'Fjalla One', sans-serif;
-  font-size: 60px;
-  margin-bottom: 40px;
+/* MODAL */
+.modal {
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,0.9);
+  display:none;
+  justify-content:center;
+  align-items:center;
+  padding:40px;
 }
 
-.contact-page p {
-  font-family: 'Fjalla One', sans-serif;
-  font-size: 20px;
+.modal-content {
+  max-width:800px;
+}
+
+.modal h3 {
+  font-family:'Fjalla One', sans-serif;
+  margin-bottom:20px;
+}
+
+.close-btn {
+  position:absolute;
+  top:40px;
+  right:60px;
+  font-size:24px;
+  cursor:pointer;
+}
+
+/* FOOTER */
+footer {
+  padding:60px;
+  text-align:center;
   color: var(--gray);
+  font-size:14px;
 }
+
 </style>
 </head>
 
 <body>
 
 <nav>
-  <div><strong>IN MY BACKYARD</strong></div>
+  <div style="font-family:'Fjalla One',sans-serif;">IN MY BACKYARD</div>
   <div>
-    <a onclick="showPage('home')">HOME</a>
-    <a onclick="showPage('services')">SERVICES</a>
-    <a onclick="showPage('work')">WORK</a>
-    <a onclick="showPage('contact')">CONTACT</a>
+    <a href="#services">Services</a>
+    <a href="#work">Work</a>
+    <a href="#contact">Contact</a>
   </div>
 </nav>
 
-<!-- HOME -->
-<div id="home" class="page active">
-  <section class="hero">
-    <div class="hero-content">
-      <h1><br></h1>
-      <p></p>
-    </div>
-    <div class="hero-side-image" id="floatingImage">
-      <img src="side.png" alt="side visual">
-    </div>
-  </section>
-</div>
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-content">
+    <h1>CREATIVE<br>STUDIO</h1>
+    <p>We build identity beyond visuals.</p>
+  </div>
+  <img src="side.png" class="hero-side-image" id="floatingImage">
+</section>
 
 <!-- SERVICES -->
-<div id="services" class="page services-page">
-  <h1>OUR PHILOSOPHY</h1>
-  <p>
-  우리는 겉으로 보이는 광고를 만들지 않습니다.
-  우리는 브랜드의 구조를 설계합니다.
-  전략 없는 크리에이티브는 소음이고,
-  철학 없는 전략은 방향을 잃습니다.
-  </p>
-</div>
+<section id="services" class="section">
+  <h2>Services</h2>
+  <div class="services-grid">
+    <div class="service-item">
+      <h3>Brand Philosophy</h3>
+      <p>우리는 브랜드의 본질을 구조화하고 서사로 만듭니다.</p>
+    </div>
+    <div class="service-item">
+      <h3>Creative Direction</h3>
+      <p>비주얼과 메시지를 통합 설계합니다.</p>
+    </div>
+    <div class="service-item">
+      <h3>Performance Strategy</h3>
+      <p>데이터 기반의 확장 전략을 만듭니다.</p>
+    </div>
+  </div>
+</section>
 
 <!-- WORK -->
-<div id="work" class="page work-page">
-  <h1>WORK</h1>
+<section id="work" class="section">
+  <h2>Work</h2>
   <div class="work-grid">
-    <div class="work-item">
-      <img src="work1.jpg">
-      <h3>PROJECT 01</h3>
+    <div class="work-item" onclick="openModal('Project 01','이 프로젝트의 상세 설명을 여기에 작성하세요.')">
+      <img src="work1.png">
     </div>
-    <div class="work-item">
-      <img src="work2.jpg">
-      <h3>PROJECT 02</h3>
+    <div class="work-item" onclick="openModal('Project 02','브랜드 전략과 제작 과정 설명.')">
+      <img src="work2.png">
     </div>
-    <div class="work-item">
-      <img src="work3.jpg">
-      <h3>PROJECT 03</h3>
+    <div class="work-item" onclick="openModal('Project 03','성과 및 결과 설명.')">
+      <img src="work3.png">
     </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact" class="section">
+  <h2>Contact</h2>
+  <p>Email: hello@inmybackyard.kr</p>
+</section>
+
+<footer>
+© 2026 IN MY BACKYARD
+</footer>
+
+<!-- MODAL -->
+<div class="modal" id="modal">
+  <div class="close-btn" onclick="closeModal()">X</div>
+  <div class="modal-content">
+    <h3 id="modalTitle"></h3>
+    <p id="modalText"></p>
   </div>
 </div>
 
-<!-- CONTACT -->
-<div id="contact" class="page contact-page">
-  <h1>CONTACT</h1>
-  <p>HELLO@INMYBACKYARD.KR</p>
-</div>
-
 <script>
-function showPage(pageId) {
-  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-  document.getElementById(pageId).classList.add('active');
-  window.scrollTo(0, 0);
-  history.pushState(null, null, '#' + pageId);
-}
 
+/* SCROLL FOLLOW EFFECT */
 const floatingImage = document.getElementById("floatingImage");
 
 window.addEventListener("scroll", () => {
   const scrollY = window.scrollY;
-  if (floatingImage) {
-    floatingImage.style.transform =
-      `translateY(${scrollY * 0.4}px)`;
-  }
+  floatingImage.style.transform =
+    `translateY(${scrollY * 0.25}px)`;
 });
+
+/* MODAL FUNCTION */
+function openModal(title, text) {
+  document.getElementById("modal").style.display = "flex";
+  document.getElementById("modalTitle").innerText = title;
+  document.getElementById("modalText").innerText = text;
+}
+
+function closeModal() {
+  document.getElementById("modal").style.display = "none";
+}
+
 </script>
 
 </body>
