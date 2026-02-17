@@ -88,7 +88,37 @@ nav a{
   line-height:1.1;
 }
 
-/* SERVICES / WORK / CONTACT 공통 */
+/* ================= HOME 추가 섹션 ================= */
+
+.home-after{
+  background:#000;
+  min-height:120vh;
+  padding:140px 6% 120px 6%;
+  position:relative;
+}
+
+.home-after h2{
+  position:absolute;
+  top:60px;
+  left:6%;
+  font-family:'Fjalla One',sans-serif;
+  letter-spacing:3px;
+}
+
+.home-grid{
+  margin-top:140px;
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:24px;
+}
+
+.home-grid img{
+  width:100%;
+  display:block;
+}
+
+/* ================= SERVICES ================= */
+
 .section-wrap{
   padding:120px 8%;
 }
@@ -98,6 +128,31 @@ nav a{
   font-size:48px;
   margin-bottom:60px;
 }
+
+/* 스크롤 히어로 */
+
+.services-scroll-wrap{
+  position:relative;
+  height:200vh;
+}
+
+.services-black{
+  position:sticky;
+  top:0;
+  height:100vh;
+  background:#000;
+  z-index:2;
+}
+
+.services-hero-image{
+  position:absolute;
+  top:100vh;
+  width:100%;
+  height:100vh;
+  background:url("services-hero.png") center/cover no-repeat;
+}
+
+/* ================= WORK ================= */
 
 .project{
   margin-bottom:120px;
@@ -116,7 +171,8 @@ nav a{
   color:var(--gray);
 }
 
-/* MOBILE 최적화 */
+/* ================= MOBILE ================= */
+
 @media(max-width:768px){
 
   nav{
@@ -134,6 +190,11 @@ nav a{
 
   .section-wrap h1{
     font-size:36px;
+  }
+
+  .home-grid{
+    grid-template-columns:repeat(2,1fr);
+    gap:14px;
   }
 
 }
@@ -162,15 +223,44 @@ nav a{
 
   <!-- MOBILE HERO -->
   <div id="mobileHero" class="mobile-hero">
-    <div class="mobile-title">
-      <br>
+    <div class="mobile-title"></div>
+  </div>
+
+  <!-- HOME 추가 그리드 -->
+  <div class="home-after">
+
+    <h2>TOGETHER WIT</h2>
+
+    <div class="home-grid">
+      <img src="img1.png">
+      <img src="img2.png">
+      <img src="img3.png">
+      <img src="img4.png">
+      <img src="img5.png">
+      <img src="img6.png">
+      <img src="img7.png">
+      <img src="img8.png">
+      <img src="img9.png">
+      <img src="img10.png">
+      <img src="img11.png">
+      <img src="img12.png">
+      <img src="img13.png">
+      <img src="img14.png">
+      <img src="img15.png">
+      <img src="img16.png">
+      <img src="img17.png">
+      <img src="img18.png">
+      <img src="img19.png">
+      <img src="img20.png">
     </div>
+
   </div>
 
 </div>
 
 <!-- SERVICES -->
 <div id="services" class="page">
+
   <div class="section-wrap">
     <h1>SERVICES</h1>
     <p>
@@ -179,6 +269,13 @@ nav a{
     크리에이티브는 구조 위에서 완성됩니다.
     </p>
   </div>
+
+  <!-- 스크롤 히어로 -->
+  <div class="services-scroll-wrap">
+    <div class="services-black"></div>
+    <div class="services-hero-image"></div>
+  </div>
+
 </div>
 
 <!-- WORK -->
@@ -240,7 +337,7 @@ function detectDevice(){
 detectDevice();
 window.addEventListener("resize", detectDevice);
 
-/* PC side.png 강한 패럴럭스 */
+/* PC side.png 패럴럭스 */
 const floatingImage = document.getElementById("floatingImage");
 
 window.addEventListener("scroll", ()=>{
