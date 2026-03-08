@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>In My Backyard</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css">
+<style>
+:root{--black:#0c0c0c;--white:#f4f1eb;--green:#546735;--green-light:#6b8444;--green-dim:rgba(84,103,53,0.35);--gray:#777;--light:#c8c5be;--surface:#141414;--border:rgba(255,255,255,0.07);}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{background:var(--black);color:var(--white);font-family:'Pretendard',-apple-system,sans-serif;font-weight:400;cursor:none;overflow-x:hidden;-webkit-font-smoothing:antialiased;}
+
+/* Cursor */
+.cursor{width:8px;height:8px;background:var(--green);border-radius:50%;position:fixed;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);transition:width .2s,height .2s,background .2s;}
+.cursor-ring{width:36px;height:36px;border:1.5px solid rgba(84,103,53,0.5);border-radius:50%;position:fixed;pointer-events:none;z-index:9998;transform:translate(-50%,-50%);transition:all .18s cubic-bezier(.16,1,.3,1);}
+.cursor.hover{width:14px;height:14px;background:var(--green-light);}
+.cursor-ring.hover{width:52px;height:52px;border-color:rgba(84,103,53,0.7);}
+
+/* Nav */
+nav{position:fixed;top:0;left:0;right:0;z-index:200;padding:0 48px;height:68px;display:flex;justify-content:space-between;align-items:center;transition:background .4s,border-color .4s;border-bottom:1px solid transparent;}
+nav.scrolled{background:rgba(12,12,12,0.85);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-color:var(--border);}
+.logo-wrap{height:32px;display:flex;align-items:center;cursor:none;}
+.logo-wrap img{height:32px;width:auto;display:block;}
+.logo-text{font-family:'Bebas Neue',sans-serif;font-size:18px;letter-spacing:3px;color:var(--white);display:none;}
+.nav-links{display:flex;gap:8px;list-style:none;}
+.nav-links a{font-size:13px;font-weight:500;letter-spacing:.3px;color:rgba(255,255,255,0.65);text-decoration:none;padding:8px 16px;border-radius:20px;transition:color .2s,background .2s;cursor:none;}
+.nav-links a:hover{color:var(--white);background:rgba(255,255,255,0.08);}
+.nav-links a.active{color:var(--white);background:rgba(84,103,53,0.25);}
+
+/* Pages */
+.page{display:none;}
+.page.active{display:block;}
+
+/* Hero */
+#hero{height:100vh;min-height:600px;display:flex;flex-direction:column;justify-content:center;padding:0 56px;position:relative;overflow:hidden;}
+.hero-bg{position:absolute;inset:0;z-index:0;background:url('background.jpg') center center/cover no-repeat;}
+.hero-bg::after{content:'';position:absolute;inset:0;background:rgba(12,12,12,0.12);}
+
+/* side.png - position:fixed 기준으로 히어로 중앙 Y에서 시작, 스크롤따라 아래로 */
+.hero-man{position:fixed;right:6vw;z-index:3;pointer-events:none;}
+.hero-man img{height:clamp(180px,28vh,360px);width:auto;display:block;filter:drop-shadow(0 16px 32px rgba(0,0,0,0.4));}
+
+.hero-content{position:relative;z-index:4;max-width:700px;}
+.hero-tag{display:block;font-size:11px;font-weight:500;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,0.65);margin-bottom:20px;opacity:0;animation:fadeUp .8s .3s forwards;}
+.hero-headline{font-family:'Bebas Neue',sans-serif;font-size:clamp(72px,12vw,172px);line-height:.9;letter-spacing:-1px;overflow:hidden;}
+.hero-headline .line{display:block;color:#fff;opacity:0;transform:translateY(110%);}
+.hero-headline .line:nth-child(1){animation:slideUp 1s .5s cubic-bezier(.16,1,.3,1) forwards;}
+.hero-headline .line:nth-child(2){animation:slideUp 1s .68s cubic-bezier(.16,1,.3,1) forwards;}
+.hero-subtitle{font-size:clamp(14px,1.6vw,20px);font-weight:400;color:rgba(255,255,255,0.85);letter-spacing:-.2px;margin-top:20px;opacity:0;animation:fadeUp .8s 1s forwards;word-break:keep-all;}
+
+/* Marquee */
+.marquee-wrap{overflow:hidden;padding:14px 0;background:var(--green);}
+.marquee-track{display:flex;animation:marquee 22s linear infinite;white-space:nowrap;}
+.marquee-track span{font-family:'Pretendard',sans-serif;font-size:13px;font-weight:500;letter-spacing:3px;text-transform:uppercase;color:rgba(255,255,255,0.9);padding:0 28px;}
+.marquee-track .dot{color:rgba(255,255,255,0.35);padding:0;font-size:10px;}
+@keyframes marquee{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+
+/* Philosophy */
+#philosophy{padding:140px 56px 120px;border-bottom:1px solid var(--border);position:relative;overflow:hidden;}
+.phil-img{position:absolute;right:56px;bottom:50px;width:clamp(200px,26vw,380px);height:clamp(240px,32vw,460px);object-fit:cover;border-radius:20px;opacity:.18;filter:grayscale(25%);transition:opacity .6s,filter .6s;pointer-events:none;z-index:0;}
+#philosophy:hover .phil-img{opacity:.28;filter:grayscale(0%);}
+.section-eyebrow{font-size:11px;font-weight:500;letter-spacing:2px;text-transform:uppercase;color:var(--green);margin-bottom:40px;display:flex;align-items:center;gap:10px;position:relative;z-index:1;}
+.section-eyebrow::before{content:'';width:24px;height:1.5px;background:var(--green);display:block;}
+.phil-text{font-size:clamp(22px,2.6vw,32px);font-weight:300;line-height:1.8;color:var(--white);max-width:1100px;word-break:keep-all;position:relative;z-index:1;}
+.phil-text strong{font-weight:600;}
+
+/* Partners */
+#partners{padding:100px 56px 140px;}
+.section-header-row{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:56px;}
+.section-title-ko{font-size:clamp(28px,3vw,40px);font-weight:700;letter-spacing:-.5px;line-height:1.2;}
+.section-count{font-size:12px;font-weight:400;color:var(--gray);letter-spacing:.5px;}
+.partners-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;}
+.partner-item{aspect-ratio:3/2;background:var(--surface);border-radius:16px;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;overflow:hidden;position:relative;transition:transform .3s cubic-bezier(.16,1,.3,1),border-color .3s,box-shadow .3s;cursor:none;}
+.partner-item:hover{transform:translateY(-4px);border-color:rgba(84,103,53,0.4);box-shadow:0 16px 40px rgba(0,0,0,0.4);}
+.partner-item img{width:55%;height:55%;object-fit:contain;filter:grayscale(100%) brightness(.6);transition:filter .4s;}
+.partner-item:hover img{filter:grayscale(20%) brightness(1);}
+.partner-item.empty{border-style:dashed;border-color:rgba(255,255,255,0.06);background:transparent;}
+.partner-item.empty::after{content:'+';font-size:20px;color:rgba(255,255,255,0.08);font-weight:300;}
+
+/* Footer */
+footer{padding:28px 56px;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;}
+.footer-logo img{height:22px;width:auto;}
+.footer-logo-text{font-family:'Bebas Neue',sans-serif;font-size:15px;letter-spacing:3px;color:rgba(255,255,255,0.5);display:none;}
+.footer-copy{font-size:12px;font-weight:400;color:var(--gray);}
+.footer-ig a{font-size:12px;font-weight:500;color:var(--gray);text-decoration:none;cursor:none;transition:color .2s;}
+.footer-ig a:hover{color:var(--green);}
+
+/* Work Page */
+#page-work{padding-top:68px;}
+.work-header{padding:72px 56px 56px;border-bottom:1px solid var(--border);}
+.work-header-eyebrow{font-size:11px;font-weight:500;letter-spacing:2px;text-transform:uppercase;color:var(--green);margin-bottom:16px;display:flex;align-items:center;gap:10px;}
+.work-header-eyebrow::before{content:'';width:24px;height:1.5px;background:var(--green);}
+.work-header h1{font-family:'Pretendard',-apple-system,sans-serif;font-size:clamp(36px,5vw,60px);font-weight:700;letter-spacing:-1.5px;line-height:1.15;margin-bottom:0;}
+.work-header-sub{font-size:14px;font-weight:400;color:var(--gray);}
+.work-header-sub a{color:var(--green);text-decoration:none;border-bottom:1px solid var(--green-dim);transition:border-color .2s;}
+.work-header-sub a:hover{border-color:var(--green);}
+.ig-section{padding:48px 56px 100px;}
+.ig-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;}
+.ig-item{position:relative;overflow:hidden;aspect-ratio:1;background:var(--surface);cursor:none;text-decoration:none;display:block;border-radius:12px;transition:transform .4s cubic-bezier(.16,1,.3,1);}
+.ig-item:hover{transform:scale(.98);}
+.ig-thumb{width:100%;height:100%;object-fit:cover;transition:transform .6s cubic-bezier(.16,1,.3,1),filter .4s;filter:grayscale(10%);}
+.ig-item:hover .ig-thumb{transform:scale(1.06);filter:grayscale(0%);}
+.ig-overlay{position:absolute;inset:0;border-radius:12px;background:linear-gradient(to top,rgba(12,12,12,0.88) 0%,transparent 50%);opacity:0;transition:opacity .3s;display:flex;flex-direction:column;justify-content:flex-end;padding:20px;}
+.ig-item:hover .ig-overlay{opacity:1;}
+.ig-arrow{position:absolute;top:14px;right:14px;width:32px;height:32px;background:var(--green);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;color:#fff;opacity:0;transform:scale(.7) rotate(-45deg);transition:opacity .3s,transform .35s cubic-bezier(.16,1,.3,1);}
+.ig-item:hover .ig-arrow{opacity:1;transform:scale(1) rotate(0deg);}
+.ig-caption{font-size:12px;font-weight:400;line-height:1.6;color:#fff;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
+.ig-placeholder{width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-family:'Bebas Neue',sans-serif;font-size:40px;color:rgba(84,103,53,0.1);}
+.ig-notice{grid-column:1/-1;padding:36px;border:1px solid rgba(84,103,53,0.2);border-radius:16px;text-align:center;margin-bottom:8px;}
+.ig-notice p{font-size:13px;font-weight:400;color:var(--gray);margin-bottom:20px;line-height:1.8;}
+.ig-btn{display:inline-flex;align-items:center;gap:8px;font-size:13px;font-weight:600;color:#fff;background:var(--green);padding:12px 28px;border-radius:24px;text-decoration:none;cursor:none;transition:background .2s,transform .2s;}
+.ig-btn:hover{background:var(--green-light);transform:translateY(-1px);}
+.ig-loading{grid-column:1/-1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:80px 20px;gap:16px;}
+.spinner{width:32px;height:32px;border:2px solid rgba(84,103,53,0.15);border-top-color:var(--green);border-radius:50%;animation:spin .8s linear infinite;}
+@keyframes spin{to{transform:rotate(360deg)}}
+.ig-loading p{font-size:12px;font-weight:400;color:var(--gray);}
+
+/* Contact Page */
+#page-contact{padding-top:68px;min-height:100vh;display:flex;flex-direction:column;}
+.contact-wrap{flex:1;display:flex;align-items:center;padding:80px 56px;position:relative;overflow:hidden;}
+.contact-bg-text{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-family:'Bebas Neue',sans-serif;font-size:22vw;color:transparent;-webkit-text-stroke:1px rgba(84,103,53,0.04);white-space:nowrap;pointer-events:none;}
+.contact-inner{position:relative;z-index:1;max-width:640px;}
+.contact-eyebrow{font-size:11px;font-weight:500;letter-spacing:2px;text-transform:uppercase;color:var(--green);margin-bottom:28px;display:flex;align-items:center;gap:10px;}
+.contact-eyebrow::before{content:'';width:24px;height:1.5px;background:var(--green);}
+.contact-heading{font-size:clamp(36px,5vw,60px);font-weight:700;letter-spacing:-1.5px;line-height:1.15;margin-bottom:20px;word-break:keep-all;color:var(--white);}
+.contact-heading em{color:var(--white);font-style:normal;}
+.contact-desc{font-size:16px;font-weight:400;color:var(--light);line-height:1.8;margin-bottom:48px;word-break:keep-all;}
+.contact-email-btn{display:inline-flex;align-items:center;gap:14px;text-decoration:none;cursor:none;background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:20px 32px;transition:background .25s,border-color .25s,transform .3s cubic-bezier(.16,1,.3,1),box-shadow .3s;}
+.contact-email-btn:hover{background:var(--green);border-color:var(--green);transform:translateY(-3px);box-shadow:0 20px 50px rgba(84,103,53,0.35);}
+.contact-email-text{font-size:clamp(16px,2vw,22px);font-weight:600;letter-spacing:-.3px;color:var(--white);}
+.contact-email-icon{width:36px;height:36px;border-radius:50%;background:rgba(84,103,53,0.2);display:flex;align-items:center;justify-content:center;font-size:16px;color:var(--green);transition:background .25s,color .25s,transform .3s;flex-shrink:0;}
+.contact-email-btn:hover .contact-email-icon{background:rgba(255,255,255,0.2);color:#fff;transform:rotate(-45deg);}
+.contact-note{margin-top:20px;font-size:13px;font-weight:400;color:var(--gray);}
+.contact-note a{color:var(--green);text-decoration:none;cursor:none;}
+
+/* Noise */
+body::after{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.025'/%3E%3C/svg%3E");pointer-events:none;z-index:9990;opacity:.3;}
+
+/* Animations */
+@keyframes fadeUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
+@keyframes slideUp{to{opacity:1;transform:translateY(0)}}
+
+/* Reveal */
+.reveal{opacity:0;transform:translateY(32px);transition:opacity .85s ease,transform .85s cubic-bezier(.16,1,.3,1);}
+.reveal.visible{opacity:1;transform:none;}
+
+/* Mobile */
+@media(max-width:768px){
+  nav{padding:0 20px;}
+  #hero{padding:0 24px;}
+  .hero-man img{height:clamp(120px,20vh,200px);}
+  #philosophy,#partners{padding:80px 24px;}
+  .ig-section,.work-header{padding-left:24px;padding-right:24px;}
+  .contact-wrap{padding:60px 24px;}
+  .partners-grid{grid-template-columns:repeat(2,1fr);gap:8px;}
+  .ig-grid{grid-template-columns:repeat(2,1fr);}
+  footer{flex-direction:column;gap:12px;text-align:center;padding:24px;}
+  .section-header-row{flex-direction:column;align-items:flex-start;gap:8px;}
+}
+@media(max-width:480px){.ig-grid{grid-template-columns:1fr;}}
+</style>
+</head>
+<body>
+
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<nav id="mainNav">
+  <a href="#" class="logo-wrap" onclick="showPage('home');return false;">
+    <img src="logo.png" alt="In My Backyard" onerror="this.style.display='none';document.querySelector('.logo-text').style.display='block'">
+    <span class="logo-text">IN MY BACKYARD</span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="#" id="nav-work" onclick="showPage('work');return false;">Work</a></li>
+    <li><a href="#" id="nav-contact" onclick="showPage('contact');return false;">Contact</a></li>
+  </ul>
+</nav>
+
+<!-- HOME -->
+<div class="page active" id="page-home">
+  <section id="hero">
+    <div class="hero-bg"></div>
+    <div class="hero-man" id="heroMan">
+      <img src="side.png" alt="" onerror="this.style.display='none'">
+    </div>
+    <div class="hero-content">
+      <span class="hero-tag">Creative Agency</span>
+      <h1 class="hero-headline">
+        <span class="line">IN MY</span>
+        <span class="line">BACKYARD</span>
+      </h1>
+      <p class="hero-subtitle">성과를 위한 가장 창의적인 선택, 인마이백야드</p>
+    </div>
+  </section>
+
+  <div class="marquee-wrap">
+    <div class="marquee-track">
+      <span>CREATIVE</span><span class="dot">·</span>
+      <span>CAMPAIGN</span><span class="dot">·</span>
+      <span>BRAND</span><span class="dot">·</span>
+      <span>CONTENT</span><span class="dot">·</span>
+      <span>DIGITAL</span><span class="dot">·</span>
+      <span>FILM</span><span class="dot">·</span>
+      <span>CREATIVE</span><span class="dot">·</span>
+      <span>CAMPAIGN</span><span class="dot">·</span>
+      <span>BRAND</span><span class="dot">·</span>
+      <span>CONTENT</span><span class="dot">·</span>
+      <span>DIGITAL</span><span class="dot">·</span>
+      <span>FILM</span><span class="dot">·</span>
+    </div>
+  </div>
+
+  <section id="philosophy">
+    <img class="phil-img" src="philosophy.png" alt="" onerror="this.style.display='none'">
+    <p class="section-eyebrow reveal">Our Philosophy</p>
+    <p class="phil-text reveal">
+      NIMBY가 아닌, IMBY.<br><br>
+      <strong>시대가 변해도 모두가 아끼고 사랑할 광고의 조건은 무엇일까요?</strong><br><br>
+      브랜드의 사회적 영향력을 발견하고, 그것을 가장 따뜻한 의미로 담아 전달하는 일.<br><br>
+      기업과 인간 사이를 연결하는 크리에이티브는 IMBY에서 그렇게 만들어집니다.
+    </p>
+  </section>
+
+  <section id="partners">
+    <div class="section-header-row reveal">
+      <h2 class="section-title-ko">함께한 브랜드</h2>
+      <span class="section-count">Partners &amp; Clients</span>
+    </div>
+    <div class="partners-grid reveal">
+      <div class="partner-item"><img src="partner1.png" alt="" onerror="this.parentElement.classList.add('empty');this.remove()"></div>
+      <div class="partner-item"><img src="partner2.png" alt="" onerror="this.parentElement.classList.add('empty');this.remove()"></div>
+      <div class="partner-item"><img src="partner3.png" alt="" onerror="this.parentElement.classList.add('empty');this.remove()"></div>
+      <div class="partner-item"><img src="partner4.png" alt="" onerror="this.parentElement.classList.add('empty');this.remove()"></div>
+      <div class="partner-item"><img src="partner5.png" alt="" onerror="this.parentElement.classList.add('empty');this.remove()"></div>
+      <div class="partner-item"><img src="partner6.png" alt="" onerror="this.parentElement.classList.add('empty');this.remove()"></div>
+      <div class="partner-item"><img src="partner7.png" alt="" onerror="this.parentElement.classList.add('empty');this.remove()"></div>
+      <div class="partner-item"><img src="partner8.png" alt="" onerror="this.parentElement.classList.add('empty');this.remove()"></div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="footer-logo">
+      <img src="logo.png" alt="In My Backyard" onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
+      <span class="footer-logo-text">IN MY BACKYARD</span>
+    </div>
+    <div class="footer-copy">© 2026 In My Backyard</div>
+    <div class="footer-ig"><a href="https://www.instagram.com/inmybackyard.kr/" target="_blank" rel="noopener">Instagram ↗</a></div>
+  </footer>
+</div>
+
+<!-- WORK -->
+<div class="page" id="page-work">
+  <div class="work-header">
+    <p class="work-header-eyebrow">Work</p>
+    <h1>PORTFOLIO</h1>
+  </div>
+  <div class="ig-section">
+    <div class="ig-grid" id="igGrid">
+      <div class="ig-loading" id="igLoading">
+        <div class="spinner"></div>
+        <p>Loading...</p>
+      </div>
+    </div>
+  </div>
+  <footer>
+    <div class="footer-logo">
+      <img src="logo.png" alt="In My Backyard" onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
+      <span class="footer-logo-text">IN MY BACKYARD</span>
+    </div>
+    <div class="footer-copy">© 2026 In My Backyard</div>
+    <div class="footer-ig"><a href="https://www.instagram.com/inmybackyard.kr/" target="_blank" rel="noopener">Instagram ↗</a></div>
+  </footer>
+</div>
+
+<!-- CONTACT -->
+<div class="page" id="page-contact">
+  <div class="contact-wrap">
+    <div class="contact-bg-text">CONTACT</div>
+    <div class="contact-inner">
+      <p class="contact-eyebrow">Get in touch</p>
+      <h1 class="contact-heading">언제든 편하게<br><em>상담하세요.</em></h1>
+      <p class="contact-desc">프로젝트 문의, 협업 제안은 언제든 환영합니다.<br>아래 버튼을 누르면 메일 앱이 열립니다.</p>
+      <a href="#" onclick="window.location='mai'+'lto:'+'support'+'@'+'inmybackyard.kr';return false;" class="contact-email-btn">
+        <span class="contact-email-text" id="emailText"></span>
+        <span class="contact-email-icon">↗</span>
+      </a>
+      <a href="https://www.instagram.com/inmybackyard.kr/" target="_blank" rel="noopener" class="contact-email-btn" style="margin-top:16px;">
+        <span class="contact-email-text">@inmybackyard.kr</span>
+        <span class="contact-email-icon">↗</span>
+      </a>
+    </div>
+  </div>
+  <footer>
+    <div class="footer-logo">
+      <img src="logo.png" alt="In My Backyard" onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
+      <span class="footer-logo-text">IN MY BACKYARD</span>
+    </div>
+    <div class="footer-copy">© 2026 In My Backyard</div>
+    <div class="footer-ig"><a href="https://www.instagram.com/inmybackyard.kr/" target="_blank" rel="noopener">Instagram ↗</a></div>
+  </footer>
+</div>
+
+<script>
+// 이메일 주소 조합 (Cloudflare 우회)
+var e = document.getElementById('emailText');
+if(e){ e.textContent = 'support' + '@' + 'inmybackyard.kr'; }
+// Cursor
+var cursor = document.getElementById('cursor');
+var ring = document.getElementById('cursorRing');
+var mx=0,my=0,rx=0,ry=0;
+document.addEventListener('mousemove',function(e){mx=e.clientX;my=e.clientY;cursor.style.left=mx+'px';cursor.style.top=my+'px';});
+(function loop(){rx+=(mx-rx)*0.13;ry+=(my-ry)*0.13;ring.style.left=rx+'px';ring.style.top=ry+'px';requestAnimationFrame(loop);})();
+document.querySelectorAll('a,button').forEach(function(el){
+  el.addEventListener('mouseenter',function(){cursor.classList.add('hover');ring.classList.add('hover');});
+  el.addEventListener('mouseleave',function(){cursor.classList.remove('hover');ring.classList.remove('hover');});
+});
+
+// Nav scroll
+var mainNav=document.getElementById('mainNav');
+window.addEventListener('scroll',function(){mainNav.classList.toggle('scrolled',window.scrollY>30);},{passive:true});
+
+// side.png 패럴랙스
+// 시작: 화면 중앙 Y (히어로 중앙)
+// 스크롤하면 정확히 같은 픽셀만큼 아래로 이동, 즉시 반응
+var heroMan=document.getElementById('heroMan');
+var heroEl=document.getElementById('hero');
+
+function positionMan(){
+  if(!heroMan||!heroEl) return;
+  var heroH=heroEl.offsetHeight;
+  var imgH=heroMan.offsetHeight||300;
+  var startTop=(heroH/2)-(imgH/2);
+  // 스크롤의 0.4배만큼만 아래로 이동 (천천히 따라감)
+  var newTop=startTop+(window.scrollY*0.4);
+  heroMan.style.top=newTop+'px';
+}
+
+window.addEventListener('scroll',positionMan,{passive:true});
+window.addEventListener('resize',positionMan);
+positionMan();
+
+// Page routing
+function showPage(name){
+  document.querySelectorAll('.page').forEach(function(p){p.classList.remove('active');});
+  document.querySelectorAll('.nav-links a').forEach(function(a){a.classList.remove('active');});
+  var page=document.getElementById('page-'+name);
+  if(page) page.classList.add('active');
+  var navEl=document.getElementById('nav-'+name);
+  if(navEl) navEl.classList.add('active');
+  window.scrollTo(0,0);
+  if(name==='home') positionMan();
+  if(name==='work'&&!window._igLoaded){window._igLoaded=true;loadFeed();}
+  setTimeout(initReveal,60);
+}
+
+// Scroll reveal
+function initReveal(){
+  var els=document.querySelectorAll('.page.active .reveal:not(.visible)');
+  var obs=new IntersectionObserver(function(entries){
+    entries.forEach(function(e){if(e.isIntersecting){e.target.classList.add('visible');obs.unobserve(e.target);}});
+  },{threshold:0.1,rootMargin:'0px 0px -40px 0px'});
+  els.forEach(function(el){obs.observe(el);});
+}
+initReveal();
+
+// Instagram
+var IG_HANDLE='inmybackyard.kr';
+var IG_LINK='https://www.instagram.com/inmybackyard.kr/';
+var INSTAGRAM_TOKEN='';
+
+function revealItems(items){
+  items.forEach(function(el,i){
+    el.style.opacity='0';el.style.transform='translateY(20px)';
+    el.style.transition='opacity 0.55s '+(i*0.07)+'s ease,transform 0.55s '+(i*0.07)+'s cubic-bezier(.16,1,.3,1)';
+    setTimeout(function(){el.style.opacity='1';el.style.transform='none';},80);
+  });
+}
+
+function renderFallback(){
+  var grid=document.getElementById('igGrid');
+  if(!grid) return;
+  var t='';
+  for(var i=0;i<9;i++){
+    t+='<a class="ig-item" href="'+IG_LINK+'" target="_blank" rel="noopener">'+
+      '<div class="ig-placeholder">'+String(i+1).padStart(2,'0')+'</div>'+
+      '<div class="ig-overlay"><div class="ig-arrow">↗</div><p class="ig-caption">@'+IG_HANDLE+'</p></div></a>';
+  }
+  grid.innerHTML='<div class="ig-notice"><p>인스타그램 피드를 불러오려면 액세스 토큰 연동이 필요합니다</p>'+
+    '<a class="ig-btn" href="'+IG_LINK+'" target="_blank" rel="noopener">@'+IG_HANDLE+' 바로가기 ↗</a></div>'+t;
+  revealItems(Array.from(grid.querySelectorAll('.ig-item')));
+}
+
+function loadFeed(){
+  if(!INSTAGRAM_TOKEN){renderFallback();return;}
+  fetch('https://graph.instagram.com/me/media?fields=id,caption,media_type,media_url,thumbnail_url,permalink&limit=9&access_token='+INSTAGRAM_TOKEN)
+    .then(function(r){return r.json();})
+    .then(function(d){
+      if(d.error||!d.data) throw new Error();
+      var grid=document.getElementById('igGrid');
+      grid.innerHTML=d.data.map(function(p){
+        var src=p.media_type==='VIDEO'?p.thumbnail_url:p.media_url;
+        var cap=(p.caption||'').replace(/</g,'&lt;').slice(0,80);
+        return '<a class="ig-item" href="'+p.permalink+'" target="_blank" rel="noopener">'+
+          '<img class="ig-thumb" src="'+src+'" alt="" loading="lazy">'+
+          '<div class="ig-overlay"><div class="ig-arrow">↗</div><p class="ig-caption">'+cap+'</p></div></a>';
+      }).join('');
+      revealItems(Array.from(grid.querySelectorAll('.ig-item')));
+    })
+    .catch(function(){renderFallback();});
+}
+</script>
+</body>
+</html>
