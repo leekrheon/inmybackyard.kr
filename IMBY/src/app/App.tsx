@@ -1285,7 +1285,7 @@ export default function App() {
             display: 'flex', flexDirection: 'column', justifyContent: 'center', padding: '0 4vw',
             opacity: 0, pointerEvents: 'none' }}>
             <img ref={typo3Ref} src="/ment3.svg" alt="ment3"
-              style={{ width: '150%', objectFit: 'contain', objectPosition: 'left center', filter: 'brightness(0)' }} />
+              style={{ width: '190%', objectFit: 'contain', objectPosition: 'left center', filter: 'brightness(0)' }} />
           </div>
         </div>
 
