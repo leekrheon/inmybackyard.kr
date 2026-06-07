@@ -1069,7 +1069,7 @@ export default function App() {
         .gallery-item:hover .gallery-img { transform: scale(1.03); }
         .gallery-info { position: absolute; top: 100%; left: 0; margin-top: 1.5rem; width: 100%; opacity: 0; transform: translateY(15px); transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1); }
         .gallery-item:hover .gallery-info { opacity: 1; transform: translateY(0); }
-        #sub-menu { position: fixed; top: 13rem; left: 2.5rem; display: flex; flex-direction: column; gap: 0.25rem; opacity: 0; pointer-events: none; transform: translateY(-10px); transition: all 0.4s ease; z-index: 40; font-size: 1.15rem; font-family: 'League Gothic', sans-serif; letter-spacing: 0.05em; }
+        #sub-menu { position: fixed; top: 20rem; left: 2.5rem; display: flex; flex-direction: column; gap: 0.25rem; opacity: 0; pointer-events: none; transform: translateY(-10px); transition: all 0.4s ease; z-index: 40; font-size: 1.15rem; font-family: 'League Gothic', sans-serif; letter-spacing: 0.05em; }
         #sub-menu.open { opacity: 1; pointer-events: auto; transform: translateY(0); }
         #sub-menu a { position: relative; width: fit-content; transition: all 0.2s ease; transform-origin: left; color: inherit; }
         #sub-menu a::before { content: ''; position: absolute; left: -14px; top: 50%; transform: translateY(-50%); border-top: 4px solid transparent; border-bottom: 4px solid transparent; border-left: 6px solid #0FCD60; opacity: 0; transition: opacity 0.2s ease; }
