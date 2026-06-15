@@ -2340,7 +2340,7 @@ export default function App() {
     const path = window.location.pathname;
     const isRoot = path === '/' || path === '/intro';
     const seo = isRoot
-      ? { title: 'IMBY — Insight Agency', description: '소비자와 기업 모두가 즐거운 광고 문화, 사회적 임팩트가 있는 단 하나의 크리에이티브 솔루션' }
+      ? { title: 'Insight Agency, IMBY', description: '소비자와 기업 모두가 즐거운 광고 문화, 사회적 임팩트가 있는 단 하나의 크리에이티브 솔루션' }
       : seoMap[activeTab ?? 'projects'];
 
     if (!seo) return;
