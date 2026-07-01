@@ -1,0 +1,691 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Matter of Fact - Portfolio</title>
+    <!-- Tailwind CSS 로드 -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* 커스텀 폰트 설정 (산세리프 강조) */
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;700;900&display=swap');
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: #ffffff;
+            color: #000000;
+            overflow: hidden; /* 전체 스크롤 방지 */
+            overscroll-behavior: none;
+        }
+
+        /* 텍스트 드래그 방지 */
+        .no-select {
+            user-select: none;
+            -webkit-user-select: none;
+        }
+
+        /* 갤러리 래퍼 (수평 스크롤 영역) */
+        #gallery-wrapper {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.8s ease-in-out;
+            z-index: 10;
+        }
+
+        #gallery-wrapper.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        #gallery-track {
+            display: flex;
+            gap: 6vw; /* 프로젝트 사이 간격 */
+            padding: 0 30vw; /* 양 끝 여백 */
+            will-change: transform; /* 애니메이션 성능 최적화 */
+        }
+
+        /* 갤러리 아이템 호버 이펙트 */
+        .gallery-item {
+            position: relative;
+            flex-shrink: 0;
+            cursor: pointer;
+        }
+
+        .gallery-img-container {
+            overflow: hidden;
+            background-color: #f3f4f6;
+        }
+
+        .gallery-img {
+            height: 55vh;
+            width: auto;
+            max-width: 60vw;
+            object-fit: cover;
+            transform-origin: center;
+            transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .gallery-item:hover .gallery-img {
+            transform: scale(1.03); /* 미세한 확대 효과 */
+        }
+
+        .gallery-info {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            margin-top: 1.5rem;
+            width: 100%;
+            opacity: 0;
+            transform: translateY(15px);
+            transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .gallery-item:hover .gallery-info {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* 서브 메뉴 스타일 */
+        #sub-menu {
+            position: fixed;
+            top: 6rem;
+            left: 2.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+            opacity: 0;
+            pointer-events: none;
+            transform: translateY(-10px);
+            transition: all 0.4s ease;
+            z-index: 40;
+            font-size: 1.1rem;
+        }
+
+        #sub-menu.open {
+            opacity: 1;
+            pointer-events: auto;
+            transform: translateY(0);
+        }
+
+        #sub-menu a {
+            transition: transform 0.2s ease;
+            transform-origin: left;
+        }
+
+        #sub-menu a:hover {
+            transform: translateX(5px);
+            font-style: italic;
+        }
+
+        /* 글래스모피즘 네비게이션 스타일 업데이트 */
+        .glass-nav {
+            position: fixed;
+            top: 1.5rem;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 0.25rem; /* 버튼 사이 간격 축소 */
+            padding: 0.35rem; /* 패딩 축소 */
+            border-radius: 9999px;
+            background: rgba(255, 255, 255, 0.4);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.05);
+            z-index: 250; /* 모달 위로 올리기 위함 */
+            opacity: 0;
+            pointer-events: none;
+            transition: all 0.5s ease;
+        }
+
+        .glass-nav.visible {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .glass-nav button {
+            font-weight: 500;
+            font-size: 0.85rem;
+            padding: 0.45rem 1.25rem;
+            border-radius: 9999px;
+            color: #000;
+            background-color: transparent;
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .glass-nav button:hover, .glass-nav button.active {
+            background-color: #000;
+            color: #fff;
+        }
+
+        /* 🌟 인트로 애니메이션 시퀀스용 CSS */
+        .intro-layer {
+            position: absolute;
+            inset: 0;
+            will-change: transform, opacity;
+        }
+        
+        #intro-img-container {
+            width: 35vw;
+            height: 45vh;
+            will-change: width, height;
+            /* 모바일 대응 */
+            @media (max-width: 768px) {
+                width: 60vw;
+                height: 40vh;
+            }
+        }
+        
+        #intro-img {
+            transform: scale(1.3);
+            will-change: transform;
+        }
+
+        .corner-txt {
+            will-change: transform, opacity;
+        }
+
+        /* 공통 모달 및 스크롤바 숨김 */
+        .fullscreen-modal {
+            scrollbar-width: none;
+        }
+        .fullscreen-modal::-webkit-scrollbar {
+            display: none;
+        }
+        
+        input:focus, textarea:focus {
+            outline: none;
+            border-color: #000;
+            box-shadow: 0 0 0 1px #000;
+        }
+
+    </style>
+</head>
+<body>
+
+    <!-- 1. 첫인상: 확장된 다단계 스크롤 시퀀스 인트로 -->
+    <div id="intro-screen" class="fixed inset-0 bg-white z-[300] overflow-hidden no-select">
+        
+        <!-- 시퀀스 1: 이미지 확장 및 베이스 텍스트 아웃 -->
+        <div id="step1-container" class="intro-layer flex items-center justify-center">
+            <h1 id="intro-text" class="absolute text-[22vw] md:text-[18vw] font-black tracking-tighter leading-none whitespace-nowrap text-black">
+                IN MY BACKYARD
+            </h1>
+            <div id="intro-img-container" class="relative overflow-hidden z-10">
+                <img id="intro-img" src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=2000&q=80" alt="Intro Image" class="w-full h-full object-cover">
+            </div>
+        </div>
+
+        <!-- 시퀀스 2: 키네틱 타이포그래피 파트 1 -->
+        <div id="step2-container" class="intro-layer flex flex-col items-center justify-center text-center px-6 opacity-0">
+            <p id="typo1" class="text-3xl md:text-5xl font-medium tracking-tight leading-snug mb-8 opacity-0">
+                문화적 영향력을 지닌 브랜드는<br>그 힘을 얻고 유지하는 방법을 압니다.
+            </p>
+            <p id="typo2" class="text-4xl md:text-7xl font-bold tracking-tighter uppercase opacity-0">
+                우리의 모든 작업은 이를 최우선으로 합니다.
+            </p>
+        </div>
+
+        <!-- 시퀀스 3: 타이포그래피 파트 2 및 코너 텍스트 -->
+        <div id="step4-container" class="intro-layer opacity-0">
+            <div class="absolute inset-0 flex items-center justify-center text-center px-6">
+                <p id="typo3" class="text-3xl md:text-6xl font-medium tracking-tight leading-snug opacity-0">
+                    당신의 브랜드도<br><span class="font-bold">문화의 중심</span>이 될 수 있습니다.
+                </p>
+            </div>
+            <!-- 모서리 텍스트들 -->
+            <div class="absolute top-12 left-6 md:left-12 text-lg md:text-2xl font-bold tracking-widest flex items-center gap-2 md:gap-4 corner-txt left-corner opacity-0 text-black">
+                <span>→</span> SEOUL
+            </div>
+            <div class="absolute top-12 right-6 md:right-12 text-lg md:text-2xl font-bold tracking-widest flex items-center gap-2 md:gap-4 corner-txt right-corner opacity-0 text-black">
+                NEW YORK <span>←</span>
+            </div>
+            <div class="absolute bottom-12 left-6 md:left-12 text-lg md:text-2xl font-bold tracking-widest flex items-center gap-2 md:gap-4 corner-txt left-corner opacity-0 text-black">
+                <span>→</span> PARIS
+            </div>
+            <div class="absolute bottom-12 right-6 md:right-12 text-lg md:text-2xl font-bold tracking-widest flex items-center gap-2 md:gap-4 corner-txt right-corner opacity-0 text-black">
+                TOKYO <span>←</span>
+            </div>
+        </div>
+
+        <!-- 시퀀스 4: 블랙 화면 반전 및 부유하는 콘텐츠 -->
+        <div id="step5-container" class="intro-layer bg-black text-white flex flex-col items-center justify-center translate-y-full z-20">
+            <div class="absolute inset-0 flex flex-col items-center justify-center px-6 text-center">
+                <p id="typo4" class="text-2xl md:text-5xl font-medium leading-relaxed z-10 opacity-0 relative">
+                    시대를 선도하는 인사이트,<br>트렌드 기획 및 창의적인 시각을 확인하세요.
+                </p>
+            </div>
+            <div id="floating-img-wrapper" class="absolute inset-0 flex items-center justify-center pointer-events-none opacity-0">
+                <img id="floating-img" src="https://images.unsplash.com/photo-1550684848-fac1c5b4e853?auto=format&fit=crop&w=1000&q=80" alt="Floating Insight" class="w-[80vw] md:w-[40vw] h-auto max-h-[60vh] object-cover shadow-2xl">
+            </div>
+        </div>
+        
+        <!-- 스크롤 유도 인디케이터 -->
+        <div id="scroll-indicator" class="absolute bottom-8 left-1/2 transform -translate-x-1/2 text-xs md:text-sm font-bold tracking-widest text-black flex flex-col items-center gap-2 opacity-100 transition-opacity duration-300 z-50">
+            <span>SCROLL DOWN</span>
+            <div class="w-[1px] h-6 bg-black"></div>
+        </div>
+    </div>
+
+    <!-- 2. 레이아웃: 상단 글래스 네비게이션 -->
+    <div id="glass-nav" class="glass-nav no-select">
+        <button id="nav-projects">Projects</button>
+        <button id="nav-press">Press</button>
+        <button id="nav-contact">Contact</button>
+    </div>
+
+    <!-- 서브 메뉴 (Projects 클릭 시 좌측에 등장) -->
+    <div id="sub-menu" class="no-select">
+        <a href="#" class="hover:text-gray-600">Film</a>
+        <a href="#" class="hover:text-gray-600">Identité</a>
+        <a href="#" class="hover:text-gray-600">Print</a>
+        <a href="#" class="hover:text-gray-600">Social</a>
+        <a href="#" class="hover:text-gray-600">Stratégie</a>
+        <a href="#" class="hover:text-gray-600">Web</a>
+    </div>
+
+    <!-- 3. 메인 인터랙션: 수평 스크롤 갤러리 (Projects) -->
+    <div id="gallery-wrapper">
+        <div id="gallery-track" class="no-select">
+            <!-- 갤러리 아이템들은 JS에서 동적으로 생성됩니다. -->
+        </div>
+    </div>
+
+    <!-- 4. 상세 페이지 모달 (프로젝트 클릭 시) -->
+    <div id="project-modal" class="fullscreen-modal fixed inset-0 z-[200] bg-[#fafafa] translate-y-full transition-transform duration-[800ms] ease-[cubic-bezier(0.16,1,0.3,1)] overflow-y-auto pt-24">
+        <button id="close-modal" class="fixed top-24 right-8 w-12 h-12 flex items-center justify-center rounded-full bg-white shadow-md hover:bg-gray-100 transition-colors z-10">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+        </button>
+        <div class="w-full max-w-6xl mx-auto py-12 px-6 md:px-12">
+            <div class="mb-16 max-w-3xl">
+                <h1 id="modal-title" class="text-4xl md:text-6xl font-bold mb-6 tracking-tight leading-tight">Title</h1>
+                <p id="modal-desc" class="text-xl md:text-2xl text-gray-500 mb-8 font-medium">Description</p>
+                <p id="modal-content" class="text-lg text-gray-800 leading-relaxed font-light">Content</p>
+            </div>
+            <div id="modal-images" class="flex flex-col gap-12 md:gap-24">
+                <!-- 상세 이미지 동적 삽입 -->
+            </div>
+        </div>
+    </div>
+
+    <!-- 5. Press (뉴스 기사) 모달 -->
+    <div id="press-modal" class="fullscreen-modal fixed inset-0 z-[150] bg-[#f0f0f0] translate-y-full transition-transform duration-[800ms] ease-[cubic-bezier(0.16,1,0.3,1)] flex items-center justify-center">
+        <div class="text-center">
+            <h2 class="text-4xl md:text-6xl font-bold tracking-tight text-gray-300 uppercase">Coming Soon</h2>
+            <p class="text-gray-400 mt-4 font-medium">Press 페이지는 준비 중입니다.</p>
+        </div>
+    </div>
+
+    <!-- 6. Contact 모달 -->
+    <div id="contact-modal" class="fullscreen-modal fixed inset-0 z-[150] bg-white translate-y-full transition-transform duration-[800ms] ease-[cubic-bezier(0.16,1,0.3,1)] overflow-y-auto pt-32 pb-24">
+        <div class="w-full max-w-4xl mx-auto px-6 md:px-12 flex flex-col md:flex-row gap-16">
+            <div class="flex-1">
+                <h2 class="text-4xl md:text-5xl font-bold mb-6 tracking-tight">Let's talk<br>about it.</h2>
+                <p class="text-gray-500 mb-12 text-lg">새로운 프로젝트, 협업 제안 등 어떤 이야기든 환영합니다. 아래 이메일로 직접 연락하시거나 폼을 남겨주세요.</p>
+                <div class="mb-12">
+                    <h4 class="text-sm font-bold text-gray-400 uppercase tracking-widest mb-2">Direct Email</h4>
+                    <a href="mailto:support@inmybackyard.kr" class="text-2xl font-medium hover:italic transition-all border-b-2 border-black pb-1">support@inmybackyard.kr</a>
+                </div>
+                <div>
+                    <h4 class="text-sm font-bold text-gray-400 uppercase tracking-widest mb-2">Office</h4>
+                    <p class="text-lg">Seoul, South Korea<br>123 Creative Street, 04567</p>
+                </div>
+            </div>
+            <div class="flex-1 bg-gray-50 p-8 rounded-2xl">
+                <form id="contact-form" class="flex flex-col gap-6" onsubmit="event.preventDefault(); alert('문의가 성공적으로 접수되었습니다. (데모)'); this.reset();">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">이름 / 회사명</label>
+                        <input type="text" required class="w-full bg-white border border-gray-200 rounded-lg px-4 py-3 text-sm transition-all" placeholder="John Doe">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">회신받을 이메일</label>
+                        <input type="email" required class="w-full bg-white border border-gray-200 rounded-lg px-4 py-3 text-sm transition-all" placeholder="john@example.com">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">문의 내용</label>
+                        <textarea required rows="4" class="w-full bg-white border border-gray-200 rounded-lg px-4 py-3 text-sm transition-all resize-none" placeholder="프로젝트 내용이나 궁금하신 점을 자유롭게 적어주세요."></textarea>
+                    </div>
+                    <button type="submit" class="w-full bg-black text-white font-medium py-4 rounded-lg mt-2 hover:bg-gray-800 transition-colors">메시지 보내기</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            
+            // --- 전역 변수 및 UI 컨트롤 ---
+            const navProjects = document.getElementById('nav-projects');
+            const navPress = document.getElementById('nav-press');
+            const navContact = document.getElementById('nav-contact');
+            const subMenu = document.getElementById('sub-menu');
+            const galleryWrapper = document.getElementById('gallery-wrapper');
+            const pressModal = document.getElementById('press-modal');
+            const contactModal = document.getElementById('contact-modal');
+            const projectDetailModal = document.getElementById('project-modal');
+
+            let isGalleryActive = false;
+            let mouseX = window.innerWidth / 2;
+            let currentScroll = 0;
+            let targetScroll = 0;
+            const ease = 0.06; 
+            let galleryAnimationId;
+
+            function closeAllSections() {
+                [navProjects, navPress, navContact].forEach(btn => btn.classList.remove('active'));
+                subMenu.classList.remove('open');
+                galleryWrapper.classList.remove('active');
+                pressModal.classList.add('translate-y-full');
+                contactModal.classList.add('translate-y-full');
+                projectDetailModal.classList.add('translate-y-full');
+                isGalleryActive = false;
+                cancelAnimationFrame(galleryAnimationId);
+            }
+
+            // --- 1. 진화된 다단계 인트로 시퀀스 스크립트 ---
+            const introScreen = document.getElementById('intro-screen');
+            const step1Container = document.getElementById('step1-container');
+            const introText = document.getElementById('intro-text');
+            const introImgContainer = document.getElementById('intro-img-container');
+            const introImg = document.getElementById('intro-img');
+            
+            const step2Container = document.getElementById('step2-container');
+            const typo1 = document.getElementById('typo1');
+            const typo2 = document.getElementById('typo2');
+            
+            const step4Container = document.getElementById('step4-container');
+            const typo3 = document.getElementById('typo3');
+            const corners = document.querySelectorAll('.corner-txt');
+            
+            const step5Container = document.getElementById('step5-container');
+            const typo4 = document.getElementById('typo4');
+            const floatingImgWrapper = document.getElementById('floating-img-wrapper');
+            const floatingImg = document.getElementById('floating-img');
+            
+            const scrollIndicator = document.getElementById('scroll-indicator');
+            const glassNav = document.getElementById('glass-nav');
+
+            let isIntroActive = true;
+            let targetIntroProgress = 0;   // 진행도 0 ~ 100
+            let currentIntroProgress = 0;  // 렌더링 프레임 진행도
+
+            // 값 매핑을 위한 유틸리티 함수 (선형 보간)
+            function mapRange(val, inMin, inMax, outMin, outMax) {
+                if (val <= inMin) return outMin;
+                if (val >= inMax) return outMax;
+                return (val - inMin) / (inMax - inMin) * (outMax - outMin) + outMin;
+            }
+
+            // 갤러리 탭에서 화면 최상단으로 강하게 스크롤 시 인트로로 돌아가는 로직
+            function checkAndReactivateIntro(deltaY) {
+                // deltaY 음수(위로 스크롤), currentScroll이 거의 왼쪽 끝일 때
+                if (!isIntroActive && deltaY < -5 && currentScroll >= -50) {
+                    const isAnyModalOpen = !projectDetailModal.classList.contains('translate-y-full') ||
+                                           !pressModal.classList.contains('translate-y-full') ||
+                                           !contactModal.classList.contains('translate-y-full');
+                    if (!isAnyModalOpen) {
+                        isIntroActive = true;
+                        introScreen.style.display = 'block';
+                        glassNav.classList.remove('visible');
+                        closeAllSections();
+                        targetIntroProgress = 95; // 역재생을 위해 95부터 시작
+                        requestAnimationFrame(renderIntroSequence);
+                    }
+                }
+            }
+
+            // 데스크탑 휠 스크롤 제어
+            window.addEventListener('wheel', (e) => {
+                checkAndReactivateIntro(e.deltaY);
+                if (!isIntroActive) return;
+                
+                // 민감도 조절 (스크롤 틱당 약 4~5씩 증가하도록 설정)
+                targetIntroProgress += e.deltaY * 0.04; 
+                targetIntroProgress = Math.max(0, Math.min(100, targetIntroProgress));
+            });
+
+            // 모바일 터치 스크롤 제어
+            let touchStartY = 0;
+            window.addEventListener('touchstart', (e) => {
+                touchStartY = e.touches[0].clientY;
+            });
+            window.addEventListener('touchmove', (e) => {
+                const touchY = e.touches[0].clientY;
+                const deltaY = touchStartY - touchY; 
+                
+                checkAndReactivateIntro(deltaY);
+
+                if (isIntroActive) {
+                    targetIntroProgress += deltaY * 0.08;
+                    targetIntroProgress = Math.max(0, Math.min(100, targetIntroProgress));
+                }
+                touchStartY = touchY; 
+            }, { passive: true });
+
+            // 핵심 렌더링 루프 (모든 애니메이션 단계 통제)
+            function renderIntroSequence() {
+                if (!isIntroActive) return;
+
+                // 관성 적용
+                currentIntroProgress += (targetIntroProgress - currentIntroProgress) * 0.08;
+                
+                // 스크롤 인디케이터 숨기기
+                scrollIndicator.style.opacity = currentIntroProgress > 2 ? '0' : '1';
+
+                const isMobile = window.innerWidth <= 768;
+
+                // --- 1단계: 메인 이미지 풀스크린 확장 (Progress 0 ~ 15) ---
+                const p1 = mapRange(currentIntroProgress, 0, 15, 0, 1);
+                const startW = isMobile ? 60 : 35; 
+                const startH = isMobile ? 40 : 45; 
+                
+                introImgContainer.style.width = `${startW + (100 - startW) * p1}vw`;
+                introImgContainer.style.height = `${startH + (100 - startH) * p1}vh`;
+                introImg.style.transform = `scale(${1.3 - 0.3 * p1})`;
+                introText.style.transform = `translateY(${p1 * -150}%)`;
+                
+                // 1단계 페이드아웃
+                step1Container.style.opacity = mapRange(currentIntroProgress, 13, 17, 1, 0);
+
+                // --- 2단계: 타이포그래피 등장 1 (Progress 15 ~ 40) ---
+                // 전체 컨테이너 투명도
+                step2Container.style.opacity = mapRange(currentIntroProgress, 16, 20, 0, 1) - mapRange(currentIntroProgress, 38, 42, 0, 1);
+                
+                // 첫 문장
+                typo1.style.opacity = mapRange(currentIntroProgress, 18, 22, 0, 1) - mapRange(currentIntroProgress, 28, 32, 0, 1);
+                typo1.style.transform = `translateY(${mapRange(currentIntroProgress, 18, 22, 40, 0)}px) translateY(${mapRange(currentIntroProgress, 28, 32, 0, -40)}px)`;
+
+                // 두 번째 문장
+                typo2.style.opacity = mapRange(currentIntroProgress, 30, 34, 0, 1);
+                typo2.style.transform = `translateY(${mapRange(currentIntroProgress, 30, 34, 40, 0)}px)`;
+
+                // --- 3단계: 새로운 타이포와 모서리 텍스트 (Progress 40 ~ 55) ---
+                step4Container.style.opacity = mapRange(currentIntroProgress, 40, 45, 0, 1);
+                // 블랙 화면이 올라올 때 같이 위로 밀려남
+                step4Container.style.transform = `translateY(${mapRange(currentIntroProgress, 55, 65, 0, -50)}vh)`;
+                
+                typo3.style.opacity = mapRange(currentIntroProgress, 42, 46, 0, 1);
+                typo3.style.transform = `translateY(${mapRange(currentIntroProgress, 42, 46, 30, 0)}px)`;
+
+                corners.forEach((corner, i) => {
+                    const delayStart = 45 + (i * 1.5);
+                    const dir = corner.classList.contains('left-corner') ? -50 : 50;
+                    corner.style.opacity = mapRange(currentIntroProgress, delayStart, delayStart + 5, 0, 1);
+                    corner.style.transform = `translateX(${mapRange(currentIntroProgress, delayStart, delayStart + 5, dir, 0)}px)`;
+                });
+
+                // --- 4단계: 화면 반전 (블랙) & 부유하는 콘텐츠 (Progress 55 ~ 95) ---
+                // 하단에서 블랙 스크린이 밀고 올라옴
+                step5Container.style.transform = `translateY(${mapRange(currentIntroProgress, 55, 65, 100, 0)}%)`;
+                
+                typo4.style.opacity = mapRange(currentIntroProgress, 65, 75, 0, 1);
+                typo4.style.transform = `translateY(${mapRange(currentIntroProgress, 65, 75, 40, 0)}px)`;
+                
+                // 이미지의 깊이감(패럴랙스)를 위한 큰 폭의 이동
+                floatingImgWrapper.style.opacity = mapRange(currentIntroProgress, 72, 80, 0, 1);
+                floatingImg.style.transform = `translateY(${mapRange(currentIntroProgress, 70, 95, 200, -80)}px) scale(${mapRange(currentIntroProgress, 70, 95, 0.9, 1.05)})`;
+
+                // --- 최종 단계: 메인 갤러리로 전환 (Progress 95 ~ 100) ---
+                introScreen.style.opacity = mapRange(currentIntroProgress, 96, 100, 1, 0);
+
+                if (currentIntroProgress > 99.6 && targetIntroProgress === 100) {
+                    isIntroActive = false;
+                    currentIntroProgress = 100;
+                    introScreen.style.display = 'none';
+                    glassNav.classList.add('visible');
+                    galleryWrapper.style.opacity = '1';
+                } else {
+                    requestAnimationFrame(renderIntroSequence);
+                }
+            }
+            
+            // 시퀀스 렌더링 시작
+            requestAnimationFrame(renderIntroSequence);
+
+
+            // --- 2. 프로젝트 갤러리 데이터 설정 ---
+            const projects = [
+                {
+                    title: "La Friche la Belle de Mai",
+                    desc: "La refonte du site web de la 1ère friche culturelle",
+                    img: "https://images.unsplash.com/photo-1541888075765-4f40d02462e7?auto=format&fit=crop&w=1200&q=80",
+                    content: "복합 문화 공간의 새로운 디지털 아이덴티티를 확립하는 프로젝트입니다.",
+                    detailImages: ["https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=1600&q=80"]
+                },
+                {
+                    title: "Institut National d'Histoire de l'Art",
+                    desc: "Une étude sémiotique pour repenser l'identité de l'institution",
+                    img: "https://images.unsplash.com/photo-1577083552431-6e5fd01988ec?auto=format&fit=crop&w=1000&q=80",
+                    content: "예술사 연구 기관의 시각적 언어를 재정립하기 위한 기호학적 연구 프로젝트입니다.",
+                    detailImages: ["https://images.unsplash.com/photo-1481627834876-b7833e8f5570?auto=format&fit=crop&w=1600&q=80"]
+                },
+                {
+                    title: "Alan",
+                    desc: "Une campagne santé en pleine crise sanitaire",
+                    img: "https://images.unsplash.com/photo-1557672172-298e090bd0f1?auto=format&fit=crop&w=1000&q=80",
+                    content: "친근한 캐릭터와 밝은 색감을 활용한 브랜드 캠페인입니다.",
+                    detailImages: ["https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=1600&q=80"]
+                }
+            ];
+
+            const galleryTrack = document.getElementById('gallery-track');
+            projects.forEach((proj, index) => {
+                const itemHTML = `
+                    <div class="gallery-item group" data-index="${index}">
+                        <div class="gallery-img-container">
+                            <img src="${proj.img}" alt="${proj.title}" class="gallery-img" draggable="false">
+                        </div>
+                        <div class="gallery-info">
+                            <h3 class="font-medium text-xl md:text-2xl">${proj.title}</h3>
+                            <p class="text-gray-500 mt-1 text-sm md:text-base">${proj.desc}</p>
+                        </div>
+                    </div>
+                `;
+                galleryTrack.insertAdjacentHTML('beforeend', itemHTML);
+            });
+
+
+            // --- 3. 네비게이션 제어 및 관성 스크롤 로직 ---
+            navProjects.addEventListener('click', () => {
+                const wasActive = navProjects.classList.contains('active');
+                closeAllSections();
+                
+                if (!wasActive) {
+                    navProjects.classList.add('active');
+                    subMenu.classList.add('open');
+                    galleryWrapper.classList.add('active');
+                    isGalleryActive = true;
+                    mouseX = window.innerWidth / 2;
+                    startScrollLoop();
+                }
+            });
+
+            navPress.addEventListener('click', () => {
+                const wasActive = navPress.classList.contains('active');
+                closeAllSections();
+                if (!wasActive) {
+                    navPress.classList.add('active');
+                    pressModal.classList.remove('translate-y-full');
+                }
+            });
+
+            navContact.addEventListener('click', () => {
+                const wasActive = navContact.classList.contains('active');
+                closeAllSections();
+                if (!wasActive) {
+                    navContact.classList.add('active');
+                    contactModal.classList.remove('translate-y-full');
+                }
+            });
+
+            window.addEventListener('mousemove', (e) => { if (isGalleryActive) mouseX = e.clientX; });
+            window.addEventListener('touchmove', (e) => { if (isGalleryActive && e.touches.length > 0) mouseX = e.touches[0].clientX; }, { passive: true });
+
+            function startScrollLoop() {
+                const trackWidth = galleryTrack.scrollWidth;
+                const windowWidth = window.innerWidth;
+                const maxScroll = Math.max(0, trackWidth - windowWidth + (windowWidth * 0.4));
+
+                function render() {
+                    if(!isGalleryActive) return;
+                    const deadzone = windowWidth * 0.1;
+                    let progress = (mouseX - deadzone) / (windowWidth - deadzone * 2);
+                    progress = Math.max(0, Math.min(1, progress));
+
+                    targetScroll = -(progress * maxScroll);
+                    currentScroll += (targetScroll - currentScroll) * ease;
+                    galleryTrack.style.transform = `translate3d(${currentScroll}px, 0, 0)`;
+
+                    galleryAnimationId = requestAnimationFrame(render);
+                }
+                render();
+            }
+
+            // --- 4. 프로젝트 상세 모달 열기 ---
+            galleryTrack.addEventListener('click', (e) => {
+                const item = e.target.closest('.gallery-item');
+                if (!item) return;
+
+                const index = item.getAttribute('data-index');
+                const proj = projects[index];
+
+                document.getElementById('modal-title').textContent = proj.title;
+                document.getElementById('modal-desc').textContent = proj.desc;
+                document.getElementById('modal-content').textContent = proj.content;
+                
+                const imagesContainer = document.getElementById('modal-images');
+                imagesContainer.innerHTML = '';
+                if(proj.detailImages) {
+                    proj.detailImages.forEach(imgSrc => {
+                        const img = document.createElement('img');
+                        img.src = imgSrc;
+                        img.className = 'w-full h-auto object-cover rounded-sm';
+                        imagesContainer.appendChild(img);
+                    });
+                }
+                projectDetailModal.classList.remove('translate-y-full');
+                isGalleryActive = false; 
+            });
+
+            document.getElementById('close-modal').addEventListener('click', () => {
+                projectDetailModal.classList.add('translate-y-full');
+                if (navProjects.classList.contains('active')) {
+                    isGalleryActive = true;
+                    mouseX = window.innerWidth / 2;
+                    startScrollLoop(); // 스크롤 루프 재시작
+                }
+            });
+
+        });
+    </script>
+</body>
+</html>
