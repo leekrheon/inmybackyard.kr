@@ -1,6 +1,0 @@
-@import './fonts.css';
-@import './tailwind.css';
-@import './theme.css';
-
-/* 사이트 전체 서체: Pretendard 단일 */
-html, body, button, input, textarea, select { font-family: 'Pretendard Variable', Pretendard, -apple-system, BlinkMacSystemFont, 'Apple SD Gothic Neo', sans-serif; }

@@ -1,0 +1,49 @@
+/* ================= About v6 — dminus1 구조 (검은 바탕 반전) ================= */
+
+/* 1. Hero — 굵은 국문 두 줄 */
+.dh { min-height: 100svh; display: grid; align-content: end; gap: clamp(40px, 6vw, 88px); padding: calc(var(--header-h) + 40px) var(--margin) clamp(40px, 5vw, 64px); }
+.dh__big { display: grid; font-size: clamp(2.75rem, 7.4vw, 7.5rem); font-weight: 800; letter-spacing: -0.055em; line-height: 1.08; }
+
+.dh__meta { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--gutter); padding-top: 18px; border-top: 1px solid var(--white); font-size: 14px; font-weight: 700; }
+.dh__meta span:nth-child(2) { text-align: center; }
+.dh__meta span:last-child { text-align: right; }
+@media (max-width: 760px) { .dh__meta { grid-template-columns: 1fr; } .dh__meta span { text-align: left !important; } }
+
+/* 3–5. 번호 목록 */
+.nl { display: grid; grid-template-columns: 5fr 7fr; gap: 0 var(--gutter); padding-block: clamp(120px, 14vw, 220px) 40px; }
+.nl__title { position: sticky; top: calc(var(--header-h) + 32px); align-self: start; font-size: clamp(1.75rem, 2.4vw, 2.125rem); font-weight: 800; letter-spacing: -0.02em; line-height: 1.05; text-transform: uppercase; }
+.nl__list { display: grid; }
+.nl__item { display: grid; grid-template-columns: 96px 1fr; padding-bottom: clamp(72px, 8vw, 120px); margin-bottom: clamp(40px, 4vw, 64px); border-bottom: 1px solid #262626; }
+.nl__item:last-child { border-bottom: 0; }
+.nl__no { position: relative; font-size: 14px; font-weight: 800; line-height: 1; padding-top: 12px; }
+.nl__no::after { content: ''; position: absolute; left: 0; top: 0; width: 40px; height: 2px; background: var(--white); }
+.nl__t { font-size: clamp(1.5rem, 2.3vw, 2.125rem); font-weight: 800; letter-spacing: -0.03em; line-height: 1.2; margin-bottom: 24px; }
+.nl__d { font-size: clamp(1.0625rem, 1.6vw, 1.4375rem); font-weight: 700; letter-spacing: -0.02em; line-height: 1.65; color: #e9e9e9; max-width: 30em; }
+.nl__proof { margin-top: 20px; font-size: 14px; font-weight: 600; line-height: 1.7; color: var(--g1); max-width: 40em; }
+.nl__img { margin-top: 28px; aspect-ratio: 16 / 9; max-width: 560px; overflow: hidden; background: #111; }
+.nl__img img { width: 100%; height: 100%; object-fit: cover; filter: grayscale(1); transition: filter 0.5s; }
+.nl__img:hover img { filter: none; }
+.nl__item--founder { grid-template-columns: 220px 1fr; gap: 40px; }
+.nl__photo { aspect-ratio: 3 / 4; overflow: hidden; background: #fff; }
+.nl__photo img { width: 100%; height: 100%; object-fit: cover; transform: scale(2.1); transform-origin: 56% 9%; filter: grayscale(1); }
+@media (max-width: 900px) {
+  .nl { grid-template-columns: 1fr; }
+  .nl__title { position: static; margin-bottom: 48px; }
+  .nl__item { grid-template-columns: 56px 1fr; }
+  .nl__item--founder { grid-template-columns: 1fr; }
+  .nl__photo { max-width: 260px; }
+}
+
+/* 6. NOW HIRING */
+.nh { display: grid; grid-template-columns: 5fr 7fr; gap: var(--gutter); padding-block: clamp(100px, 12vw, 180px) var(--sec); border-top: 1px solid #262626; }
+.nh__big { font-size: clamp(3rem, 6.4vw, 9rem); font-weight: 800; letter-spacing: -0.05em; line-height: 0.9; white-space: nowrap; }
+.nh__side { display: grid; align-content: start; gap: 18px; padding-top: 12px; }
+.nh__d { font-size: clamp(1.0625rem, 1.6vw, 1.4375rem); font-weight: 700; letter-spacing: -0.02em; line-height: 1.65; }
+.nh__link { width: fit-content; font-size: 15px; font-weight: 700; border-bottom: 1px solid currentColor; }
+.nh__h { margin-top: 40px; font-size: 17px; font-weight: 700; }
+.nh__list { border-top: 1px solid var(--white); }
+.nh__list li { display: flex; justify-content: space-between; align-items: center; gap: 16px; padding: 18px 0; border-bottom: 1px solid #262626; font-size: 17px; font-weight: 700; }
+.nh__list a { font-size: 13px; font-weight: 700; padding: 8px 14px; border: 1px solid var(--white); border-radius: 999px; transition: background 0.2s, color 0.2s; }
+.nh__list a:hover { background: var(--white); color: var(--black); }
+@media (max-width: 900px) { .nh { grid-template-columns: 1fr; } .nh__big { font-size: 13vw; } }
+

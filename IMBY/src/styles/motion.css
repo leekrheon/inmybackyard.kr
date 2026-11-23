@@ -1,0 +1,84 @@
+/* =====================================================================
+   Motion — 모든 버튼·링크 전환을 같은 곡선과 길이로 부드럽게.
+   빠르게 반응하고(첫 순간), 천천히 내려앉는다(꼬리). 누르면 살짝 눌린다.
+   ===================================================================== */
+:root {
+  --soft: cubic-bezier(0.19, 1, 0.22, 1);
+  --t-fast: 0.45s;
+  --t-slow: 0.8s;
+}
+
+a, button { -webkit-tap-highlight-color: transparent; }
+a, button, [role='tab'] {
+  transition: color var(--t-fast) var(--soft), background-color var(--t-fast) var(--soft),
+    border-color var(--t-fast) var(--soft), opacity var(--t-fast) var(--soft), transform var(--t-fast) var(--soft);
+}
+
+/* ---------- pill: 배경이 아래에서 차오르는 채움 ---------- */
+.pill {
+  position: relative; isolation: isolate; overflow: hidden;
+  transition: color var(--t-slow) var(--soft), border-color var(--t-slow) var(--soft), transform var(--t-fast) var(--soft);
+}
+.pill::before {
+  content: ''; position: absolute; inset: -1px; z-index: -1; border-radius: inherit;
+  background: var(--white);
+  transform: translateY(101%); border-radius: 50% 50% 0 0 / 40% 40% 0 0;
+  transition: transform var(--t-slow) var(--soft), border-radius var(--t-slow) var(--soft);
+}
+.pill:hover { background: transparent; color: var(--black); border-color: var(--white); }
+.pill:hover::before { transform: translateY(0); border-radius: 0; }
+.pill:active { transform: scale(0.965); }
+.band-white .pill::before { background: var(--black); }
+.band-white .pill:hover { background: transparent; color: var(--white); border-color: var(--black); }
+/* 흰색으로 꽉 찬 버튼은 반대로: 검정이 차오른다 */
+.pill--solid { background: var(--white); color: var(--black); }
+.pill--solid::before { background: var(--black); }
+.pill--solid:hover { background: var(--white); color: var(--white); border-color: var(--white); }
+
+/* ---------- 상단 메뉴: 밑줄이 왼쪽에서 그어지고 오른쪽으로 빠진다 ---------- */
+.hd__top::after {
+  content: ''; position: absolute; left: 0; right: 0; bottom: 20px; height: 1.5px; background: var(--white);
+  transform: scaleX(0); transform-origin: right center;
+  transition: transform var(--t-slow) var(--soft);
+}
+.hd__top:hover::after, .hd__top.is-on::after { transform: scaleX(1); transform-origin: left center; }
+.hd__top:hover { opacity: 1; }
+.hd__nav:hover .hd__top:not(:hover) { opacity: 0.45; }
+
+/* ---------- 선택형 버튼(칩·탭·메뉴판·달력) ---------- */
+.chip, .wkx__tabs button, .menu__item, .cal__cell, .cx button, .dd__menu button {
+  transition: color var(--t-fast) var(--soft), background-color var(--t-fast) var(--soft),
+    border-color var(--t-fast) var(--soft), transform var(--t-fast) var(--soft);
+}
+.chip:active, .wkx__tabs button:active, .menu__item:active, .cal__cell:active, .cx button:active { transform: scale(0.97); }
+.cx button span { transition: transform var(--t-slow) var(--soft); }
+.cx button:hover span { transform: translateX(6px); }
+.cx button.is-on span { transform: none; }
+
+/* ---------- 드롭다운: 접히고 펼쳐지는 것도 같은 곡선 ---------- */
+.dd__menu { transition: opacity var(--t-fast) var(--soft), transform var(--t-fast) var(--soft), visibility 0s var(--t-fast); }
+.dd.is-open .dd__menu { transition: opacity var(--t-fast) var(--soft), transform var(--t-fast) var(--soft); }
+.dd__btn svg { transition: transform var(--t-fast) var(--soft); }
+
+/* ---------- 텍스트 링크 ---------- */
+.ft__links a, .hd__sub a, .cx__mail, .nh__list a, .wdc__pn-item, .mnav__top { transition: color var(--t-fast) var(--soft), opacity var(--t-fast) var(--soft), background-color var(--t-fast) var(--soft); }
+.wdc__back, .wdc__share { transition: border-color var(--t-fast) var(--soft), background-color var(--t-fast) var(--soft), color var(--t-fast) var(--soft), transform var(--t-fast) var(--soft); }
+.wdc__back:hover, .wdc__share:hover { background: var(--white); color: var(--black); }
+.wdc__back:active, .wdc__share:active, .totop:active { transform: scale(0.95); }
+
+/* ---------- 카드: 이미지가 천천히 확대, 나머지는 천천히 어두워짐 ---------- */
+.hw__img img { transition: transform 1.2s var(--soft), filter var(--t-slow) var(--soft); }
+.pr-card img { transition: transform 1.2s var(--soft); }
+
+/* ---------- 맨 위로 ---------- */
+.totop { transition: opacity var(--t-fast) var(--soft), transform var(--t-slow) var(--soft), background-color var(--t-fast) var(--soft); }
+.totop:hover { transform: translateY(-3px); }
+
+/* ---------- 페이지 전환: 살짝 떠오르며 ---------- */
+.page { animation: pageInSoft 0.9s var(--soft) both; }
+@keyframes pageInSoft { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: none; } }
+
+@media (prefers-reduced-motion: reduce) {
+  .pill::before { transition: none; }
+  .page { animation: none; }
+}

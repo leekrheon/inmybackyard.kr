@@ -1,0 +1,26 @@
+/* =====================================================================
+   홈 — 제작은 무한해졌고, 인사이트는 희소해졌습니다
+   About의 What we believe(.nl) 레이아웃을 그대로 쓰고, 그래픽은 은색 픽셀 3D(.nl__fx)
+   ===================================================================== */
+.ins.nl { border-top: 1px solid #1f1f1f; }
+.ins__head { position: sticky; top: calc(var(--header-h) + 32px); align-self: start; display: grid; justify-items: start; gap: 28px; }
+.ins__head .nl__title { position: static; }
+.ins__hand { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1px; margin-top: 22px; background: #2a2a2a; border: 1px solid #2a2a2a; max-width: 560px; }
+.ins__hand li { display: grid; gap: 4px; padding: 16px 18px; background: #000; }
+.ins__hand span { font-size: 11px; font-weight: 700; color: var(--g2); }
+.ins__hand strong { font-size: 15px; font-weight: 700; letter-spacing: -0.01em; }
+.ins__hand em { font-style: normal; font-size: 13px; font-weight: 500; line-height: 1.65; color: #bdbdbd; word-break: keep-all; }
+@media (max-width: 900px) {
+  .ins__head { position: static; margin-bottom: 48px; }
+  .ins__hand { grid-template-columns: 1fr; }
+}
+
+/* ---------- Client: 선 없이 흰색 로고만, 흰색 라벨 ---------- */
+.cw { border-top: 1px solid #1f1f1f; }
+.cw__label { margin-bottom: clamp(28px, 3vw, 44px); font-size: 13px; font-weight: 800; letter-spacing: 0.06em; color: #fff; }
+.cw__grid { gap: clamp(24px, 3vw, 48px); }
+.cw__item, .cw__grid li:nth-child(4n) .cw__item, .cw__grid li:nth-child(2n) .cw__item { border: 0; height: clamp(90px, 9vw, 130px); }
+.cw__item:hover { background: transparent; }
+.cw__item img { filter: none; opacity: 1; transition: opacity 0.5s var(--soft, var(--ease)), transform 0.6s var(--soft, var(--ease)); }
+.cw__grid:hover .cw__item img { opacity: 0.4; }
+.cw__grid .cw__item:hover img { opacity: 1; transform: scale(1.04); }
