@@ -112,7 +112,7 @@ const LETTER = [
   '열아홉 살, 그 질문에 처음으로 답해 보았습니다. 직접 기획한 첫 옥외광고가 검색량을 집계 최고치로 끌어올린 것입니다. 아이디어 하나가 실제로 사람들의 행동을 바꾸는 순간을 목격했고, 지금까지 저는 그 창의력이 가진 힘을 확신하며 살아오고 있습니다.',
   'IMBY는 그 확신에서 출발했습니다. 그리고 저희는 좋은 크리에이티브에는 반드시 ‘그래야만 하는 이유’가 있다고 믿습니다. 잘 만든 제품 디자인에 이유 없는 선이 하나도 없듯, 매체를 고르는 이유부터 카피 한 줄을 쓰는 이유까지, 모든 요소에 당위성을 쌓아 올려 논리적으로 정답에 가까운 크리에이티브를 찾아갑니다. 저희는 이것을 ‘렐러번스(Relevance)’라고 부릅니다.',
   '브랜드가 가진 고민을 저희의 고민처럼 붙잡고, ‘왜 꼭 이것이어야 하는가’에 답할 수 있을 때까지 머리를 맞댑니다.',
-  '저희가 바라는 것은 단순한 대행사가 아닙니다. 같은 테이블에 앉아 함께 고민하고, 함께 웃고, 결과 앞에서 함께 기뻐하는 진짜 파트너가 되고 싶습니다.',
+  '저희는 일을 받아 처리하는 곳에 머물고 싶지 않습니다. 같은 테이블에 앉아 함께 고민하고, 함께 웃고, 결과 앞에서 함께 기뻐하는 진짜 파트너가 되고 싶습니다.',
 ];
 
 /* ---------------- 5. Greetings — 대표 편지. 스크롤에 맞춰 한 문단씩 떠오른다 ---------------- */
@@ -141,13 +141,13 @@ function Hiring() {
     <section className="nh wrap">
       <h2 className="nh__big">Join the<br />backyard</h2>
       <div className="nh__side">
-        <p className="nh__d">IMBY의 방식에 공감하고, 현장에서 인사이트를 길어 올릴 동료를 찾습니다. 연차와 직무보다 태도를 봅니다. 같은 뒷마당에서 함께 일해요.</p>
+        <p className="nh__d">IMBY의 방식에 공감하고, 무엇을 말할지부터 함께 고민할 동료를 찾습니다. 연차와 직무보다 태도를 봅니다. 같은 뒷마당에서 함께 일해요.</p>
         <ul className="nh__list">
           {data.length > 0 ? data.map((o) => (
-            <li key={o.id}><span>{[o.title, o.experience, 'Open'].filter(Boolean).join(' / ')}</span><a href="mailto:idealee@inmybackyard.kr?subject=IMBY%20%EC%A7%80%EC%9B%90">Apply</a></li>
+            <li key={o.id}><span>{[o.title, o.experience, 'Open'].filter(Boolean).join(' / ')}</span><a href="mailto:support@inmybackyard.kr?subject=IMBY%20%EC%A7%80%EC%9B%90">Apply</a></li>
           )) : (
             <>
-              <li><span>상시 지원 / 포트폴리오 / Open</span><a href="mailto:idealee@inmybackyard.kr?subject=IMBY%20%EC%A7%80%EC%9B%90">Apply</a></li>
+              <li><span>상시 지원 / 포트폴리오 / Open</span><a href="mailto:support@inmybackyard.kr?subject=IMBY%20%EC%A7%80%EC%9B%90">Apply</a></li>
               <li><span>커피챗 / 합류 고민 / Open</span><Link to="/contact/coffee-chat">Coffee Chat</Link></li>
             </>
           )}

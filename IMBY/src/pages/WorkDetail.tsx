@@ -105,10 +105,10 @@ export default function WorkDetail() {
     <article className="cs">
       <header className="cs__head wrap">
         <div className="cs__top">
-          <button className="wdc__back" onClick={() => (window.history.length > 1 ? nav(-1) : nav('/work'))} aria-label="뒤로">
+          <button className="wdc__back" onClick={() => (window.history.length > 1 ? nav(-1) : nav('/work'))} aria-label="Back">
             <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 12H4.5M10.5 5.5 4 12l6.5 6.5" /></svg>
           </button>
-          <button className="wdc__share" onClick={share} aria-label="링크 복사">
+          <button className="wdc__share" onClick={share} aria-label="Copy link">
             {copied ? <span className="wdc__copied">Copied</span> : (
               <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="18" cy="5.5" r="2.6" /><circle cx="6" cy="12" r="2.6" /><circle cx="18" cy="18.5" r="2.6" /><path d="M8.3 10.8l7.4-4M8.3 13.2l7.4 4" /></svg>
             )}
@@ -149,7 +149,7 @@ export default function WorkDetail() {
       <Images list={p.gallery ?? undefined} />
 
       {data.length > 1 && (
-        <nav className="wdc__pn wrap" aria-label="다른 작업">
+        <nav className="wdc__pn wrap" aria-label="More work">
           <Link to={`/work/${prev.slug}`} className="wdc__pn-item">
             <span className="g2">Prev</span>
             <strong>{prev.title}</strong>

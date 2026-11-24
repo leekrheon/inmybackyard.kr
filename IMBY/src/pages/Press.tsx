@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
+import { useLang } from '../lib/i18n';
 import { Link } from 'react-router-dom';
 import { usePress } from '../lib/data';
 import { Rv } from '../components/Reveal';
@@ -18,8 +19,9 @@ const fmt = (d: string) => d.replaceAll('-', '.');
 
 /** 외부 기사는 원문으로 새 창, 내부 소식은 사이트 안에서 이동 */
 function Item({ r, children, className, tabIndex }: { r: Row; children: React.ReactNode; className: string; tabIndex?: number }) {
+  const { t } = useLang();
   return r.external
-    ? <a href={r.href} target="_blank" rel="noopener noreferrer" className={className} tabIndex={tabIndex} aria-label={`${r.title} — ${r.source} 원문 기사 새 창으로 열기`}>{children}</a>
+    ? <a href={r.href} target="_blank" rel="noopener noreferrer" className={className} tabIndex={tabIndex} aria-label={t(`${r.title} — ${r.source} 원문 기사 새 창으로 열기`, `${r.title} — read on ${r.source} (opens in a new tab)`)}>{children}</a>
     : <Link to={r.href} className={className} tabIndex={tabIndex}>{children}</Link>;
 }
 
@@ -37,6 +39,7 @@ function Banner({ rows }: { rows: Row[] }) {
   const [paused, setPaused] = useState(false);
   const [tick, setTick] = useState(0); // 진행 막대 재시작용
   const n = rows.length;
+  const { t } = useLang();
   const timer = useRef<number | null>(null);
 
   useEffect(() => {
@@ -53,7 +56,7 @@ function Banner({ rows }: { rows: Row[] }) {
       className={`prb wrap ${paused ? 'is-paused' : ''}`}
       onMouseEnter={() => setPaused(true)} onMouseLeave={() => setPaused(false)}
       onFocus={() => setPaused(true)} onBlur={() => setPaused(false)}
-      aria-roledescription="carousel" aria-label="최신 기사"
+      aria-roledescription="carousel" aria-label={t('최신 기사', 'Latest news')}
     >
       <div className="prb__stage">
         {rows.map((r, k) => (
@@ -61,7 +64,7 @@ function Banner({ rows }: { rows: Row[] }) {
             <div className="prb__text" aria-hidden={k !== i}>
               <h1 className="prb__title">{r.title}</h1>
               {r.desc && <p className="prb__desc">{r.desc}</p>}
-              <span className="prb__more">{r.external ? '원문 기사 보기 ↗' : '자세히 보기 →'}</span>
+              <span className="prb__more">{r.external ? t('원문 기사 보기 ↗', 'Read the article ↗') : t('자세히 보기 →', 'Read more →')}</span>
             </div>
             <div className="prb__img"><Pic src={r.img} alt={k === i ? r.title : ''} fallback={r.source} /></div>
           </Item>
@@ -69,9 +72,9 @@ function Banner({ rows }: { rows: Row[] }) {
       </div>
       {n > 1 && (
         <div className="prb__nav">
-          <div className="prb__dots" role="tablist" aria-label="기사 선택">
+          <div className="prb__dots" role="tablist" aria-label={t('기사 선택', 'Choose article')}>
             {rows.map((r, k) => (
-              <button key={r.id} role="tab" aria-selected={k === i} aria-label={`${k + 1}번째 기사`} className={k === i ? 'is-on' : ''} onClick={() => go(k)}>
+              <button key={r.id} role="tab" aria-selected={k === i} aria-label={t(`${k + 1}번째 기사`, `Article ${k + 1}`)} className={k === i ? 'is-on' : ''} onClick={() => go(k)}>
                 <i key={k === i ? `on-${tick}` : 'off'} style={{ animationDuration: `${SLIDE_MS}ms` }} />
               </button>
             ))}
@@ -83,7 +86,8 @@ function Banner({ rows }: { rows: Row[] }) {
 }
 
 export default function Press() {
-  useDocTitle('Press — IMBY', 'IMBY의 소식과 언론 보도.');
+  const { t } = useLang();
+  useDocTitle('Press — IMBY', t('IMBY의 소식과 언론 보도.', 'News and press coverage of IMBY.'));
   const { data, loading } = usePress();
   const external: Row[] = useMemo(
     () => data.map((n) => ({
@@ -106,7 +110,7 @@ export default function Press() {
       {!loading && rows.length === 0 && (
         <section className="wrap pr-empty">
           <h1 className="pr-empty__t">Press</h1>
-          <p className="g2">아직 등록된 기사가 없습니다.</p>
+          <p className="g2">{t('아직 등록된 기사가 없습니다.', 'No articles yet.')}</p>
         </section>
       )}
 

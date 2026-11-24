@@ -1,10 +1,11 @@
 import { useEffect, useLayoutEffect, useRef, useState } from 'react';
+import { useLang } from '../lib/i18n';
 import { Link } from 'react-router-dom';
 import { gsap, ScrollTrigger, prefersReducedMotion } from '../lib/motion';
 import { useProjects } from '../lib/data';
 import { Statement } from '../components/Titles';
 import ClientWall from '../components/ClientWall';
-import InsightSystem from '../components/InsightSystem';
+import InsightScroll from '../components/InsightScroll';
 import BrainField from '../components/BrainField';
 import Typewriter from '../components/Typewriter';
 import WorkMosaic from '../components/WorkMosaic';
@@ -31,7 +32,7 @@ function Kv() {
 
   return (
     <section className="kv" ref={root}>
-      <div className="kv__stage"><BrainField className="kv__brain" topSrc="/brand/insight-agency-imby.svg" topCrop={[1272, 0, 480, 192]} view={typed ? 1 : 0} /></div>
+      <div className="kv__stage"><BrainField className="kv__brain" stars={7500} topSrc="/brand/insight-agency-imby.svg" topCrop={[1272, 0, 480, 192]} view={typed ? 1 : 0} /></div>
       {/* 타이핑이 끝나면 문장이 사라지고, 아래쪽에 IMBY 워드마크가 가로로 가득 차게 나타난다 */}
       <div className={`kv__sign wrap ${typed ? 'is-on' : ''}`}>
         <img src="/brand/insight-agency-imby.svg" alt="Insight Agency, IMBY" />
@@ -67,12 +68,13 @@ function WorkGrid() {
 /* 05. Contact                                                          */
 /* ------------------------------------------------------------------ */
 function ContactCta() {
+  const { t } = useLang();
   return (
     <section className="hc wrap">
-      <Statement lines={['문제를 같이 고민할', '뇌가 필요하다면.']} />
+      <Statement lines={t(['문제를 같이 고민할', '뇌가 필요하다면.'], ['Need another brain', 'on the problem?'])} />
       <div className="hc__grid">
         <div className="hc__info">
-          <a href="mailto:idealee@inmybackyard.kr">idealee@inmybackyard.kr</a>
+          <a href="mailto:support@inmybackyard.kr">support@inmybackyard.kr</a>
         </div>
         <div className="hc__btns">
           <Link to="/contact" className="pill pill--xl">Get On Board</Link>
@@ -84,7 +86,8 @@ function ContactCta() {
 }
 
 export default function Home() {
-  useDocTitle('IMBY 임비', 'Creative Insight Company. AI가 대체할 수 없는 창의적인 인사이트를 만듭니다.');
+  const { t } = useLang();
+  useDocTitle('IMBY 임비', t('Creative Insight Company. AI가 대체할 수 없는 창의적인 인사이트를 만듭니다.', 'Creative Insight Company. We create the creative insight AI cannot replace.'));
   useEffect(() => {
     const t = window.setTimeout(() => ScrollTrigger.refresh(), 400);
     return () => window.clearTimeout(t);
@@ -93,7 +96,7 @@ export default function Home() {
     <>
       <Kv />
       <WorkGrid />
-      <InsightSystem />
+      <InsightScroll />
       <ClientWall />
       <ContactCta />
     </>

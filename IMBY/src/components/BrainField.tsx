@@ -77,6 +77,55 @@ export const FRAG = /* glsl */ `
   }
 `;
 
+/** 배경 별 — 같은 은색 사각 픽셀. 3D 공간에 흩어 두어 시점을 돌리면 함께 돈다 */
+const STAR_VERT = /* glsl */ `
+  attribute float aSeed;
+  attribute float aMag;
+  uniform float uTime;
+  uniform float uPR;
+  uniform float uFade;
+  varying float vA;
+  void main() {
+    gl_Position = projectionMatrix * viewMatrix * vec4(position, 1.0);
+    // 천천히 숨쉬듯 깜빡이고, 몇몇은 가끔 반짝 빛난다
+    float tw = 0.55 + 0.45 * sin(uTime * (0.4 + aSeed * 1.3) + aSeed * 60.0);
+    float flash = pow(max(0.0, sin(uTime * (0.25 + aSeed * 0.5) + aSeed * 90.0)), 40.0);
+    vA = (0.22 + aMag * 0.7) * tw * uFade + flash * 0.7 * uFade;
+    gl_PointSize = (1.3 + aMag * 2.0 + flash * 1.4) * uPR;
+  }
+`;
+const STAR_FRAG = /* glsl */ `
+  precision highp float;
+  varying float vA;
+  void main() {
+    vec2 c = abs(gl_PointCoord - 0.5);
+    if (max(c.x, c.y) > 0.46) discard;
+    gl_FragColor = vec4(vec3(0.86, 0.88, 0.92), vA);
+  }
+`;
+
+/** 별똥별 — 화면 기준으로 떨어지는 픽셀 꼬리. 머리는 밝고 꼬리로 갈수록 사라진다 */
+const METEOR_VERT = /* glsl */ `
+  attribute float aA;
+  uniform float uPR;
+  varying float vA;
+  void main() {
+    vA = aA;
+    gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+    gl_PointSize = (1.1 + aA * 1.6) * uPR;
+  }
+`;
+const METEOR_FRAG = /* glsl */ `
+  precision highp float;
+  varying float vA;
+  void main() {
+    if (vA < 0.01) discard;
+    vec2 c = abs(gl_PointCoord - 0.5);
+    if (max(c.x, c.y) > 0.46) discard;
+    gl_FragColor = vec4(vec3(0.92, 0.94, 1.0), vA);
+  }
+`;
+
 function loadImage(src: string) {
   return new Promise<HTMLImageElement>((res, rej) => {
     const im = new Image();
@@ -209,9 +258,11 @@ type Props = {
   delay?: number;
   /** false 면 픽셀이 모이는 연출 없이 처음부터 완성된 모양 */
   assemble?: boolean;
+  /** 배경에 흩뿌릴 픽셀 별 개수 (0 이면 없음) */
+  stars?: number;
 };
 
-export default function BrainField({ className = '', src = SRC, mode = 'image', grid = GRID, fit = false, tilt = 1, springy = true, topSrc, topCrop, view = 0, dissolve = true, delay = 0, assemble = true }: Props) {
+export default function BrainField({ className = '', src = SRC, mode = 'image', grid = GRID, fit = false, tilt = 1, springy = true, topSrc, topCrop, view = 0, dissolve = true, delay = 0, assemble = true, stars = 0 }: Props) {
   const host = useRef<HTMLDivElement | null>(null);
   const viewRef = useRef(view);
   viewRef.current = view;
@@ -243,6 +294,86 @@ export default function BrainField({ className = '', src = SRC, mode = 'image', 
     camera.position.set(0, 0, baseZ);
     const group = new THREE.Group();
     scene.add(group);
+
+    // ---------- 배경 별 ----------
+    // 그림(뇌·글자)이 있는 가운데 덩어리는 비워 두고, 그 바깥 넓은 공간에 흩뿌린다
+    const starU = { uTime: { value: 0 }, uPR: { value: Math.min(window.devicePixelRatio, 2) }, uFade: { value: 0 } };
+    let starGeo: THREE.BufferGeometry | null = null, starMat: THREE.ShaderMaterial | null = null;
+    if (stars > 0) {
+      const sp = new Float32Array(stars * 3), ss = new Float32Array(stars), sm = new Float32Array(stars);
+      for (let i = 0; i < stars; i++) {
+        let x = 0, y = 0, z = 0;
+        do { x = (Math.random() * 2 - 1) * 4.2; y = (Math.random() * 2 - 1) * 3.2; z = (Math.random() * 2 - 1) * 4.2; }
+        while (Math.hypot(x / 1.35, y / 0.95, z / 1.35) < 1);
+        sp[i * 3] = x; sp[i * 3 + 1] = y; sp[i * 3 + 2] = z;
+        ss[i] = Math.random();
+        sm[i] = Math.pow(Math.random(), 2.6); // 대부분 희미하고 몇 개만 밝게
+      }
+      starGeo = new THREE.BufferGeometry();
+      starGeo.setAttribute('position', new THREE.BufferAttribute(sp, 3));
+      starGeo.setAttribute('aSeed', new THREE.BufferAttribute(ss, 1));
+      starGeo.setAttribute('aMag', new THREE.BufferAttribute(sm, 1));
+      starMat = new THREE.ShaderMaterial({ uniforms: starU, vertexShader: STAR_VERT, fragmentShader: STAR_FRAG, transparent: true, depthWrite: false, blending: THREE.AdditiveBlending });
+      const pts = new THREE.Points(starGeo, starMat);
+      pts.renderOrder = -1;
+      scene.add(pts);
+    }
+
+    // ---------- 별똥별: 1.2초마다 하나씩, 화면 위쪽에서 비스듬히 떨어진다 ----------
+    // 카메라에 붙여 두어, 뇌를 돌려도 늘 화면 기준으로 떨어진다
+    const M_POOL = 4, M_TRAIL = 26;
+    type Meteor = { x: number; y: number; dx: number; dy: number; age: number; life: number; len: number; on: boolean };
+    const meteors: Meteor[] = Array.from({ length: M_POOL }, () => ({ x: 0, y: 0, dx: 0, dy: 0, age: 0, life: 1, len: 0.3, on: false }));
+    let mGeo: THREE.BufferGeometry | null = null, mMat: THREE.ShaderMaterial | null = null;
+    let mPos: Float32Array | null = null, mA: Float32Array | null = null;
+    let nextMeteor = 1.2;
+    if (stars > 0) {
+      mPos = new Float32Array(M_POOL * M_TRAIL * 3);
+      mA = new Float32Array(M_POOL * M_TRAIL);
+      mGeo = new THREE.BufferGeometry();
+      mGeo.setAttribute('position', new THREE.BufferAttribute(mPos, 3));
+      mGeo.setAttribute('aA', new THREE.BufferAttribute(mA, 1));
+      mGeo.boundingSphere = new THREE.Sphere(new THREE.Vector3(), 100);
+      mMat = new THREE.ShaderMaterial({ uniforms: { uPR: starU.uPR }, vertexShader: METEOR_VERT, fragmentShader: METEOR_FRAG, transparent: true, depthWrite: false, blending: THREE.AdditiveBlending });
+      const mPts = new THREE.Points(mGeo, mMat);
+      mPts.frustumCulled = false;
+      mPts.position.z = -2; // 카메라 바로 앞 평면
+      camera.add(mPts);
+      scene.add(camera);
+    }
+    const spawnMeteor = () => {
+      const m = meteors.find((x) => !x.on);
+      if (!m || !(camera instanceof THREE.OrthographicCamera)) return;
+      // 보이는 하늘 안(가로 오른쪽 3/4, 세로 위쪽 절반)에서 시작해 왼쪽 아래로 가로지른다
+      const W = camera.right, top = camera.top, bot = camera.bottom, H = (top - bot) / 2;
+      m.x = (-0.1 + Math.random() * 1.0) * W; m.y = bot + (top - bot) * (0.55 + Math.random() * 0.4);
+      const ang = THREE.MathUtils.degToRad(200 + Math.random() * 25); // 왼쪽 아래로 비스듬히
+      const sp = (1.6 + Math.random() * 1.2) * H;
+      m.dx = Math.cos(ang) * sp; m.dy = Math.sin(ang) * sp;
+      m.age = 0; m.life = 0.7 + Math.random() * 0.5; m.len = (0.22 + Math.random() * 0.2) * H; m.on = true;
+    };
+    const updateMeteors = (dt: number) => {
+      if (!mPos || !mA || !mGeo) return;
+      nextMeteor -= dt;
+      if (nextMeteor <= 0) { spawnMeteor(); nextMeteor += 1.2; }
+      meteors.forEach((m, k) => {
+        if (m.on) { m.age += dt; if (m.age > m.life) m.on = false; }
+        const life = m.on ? m.age / m.life : 1;
+        const fade = m.on ? Math.sin(Math.min(1, life) * Math.PI) : 0; // 스르륵 나타났다 사라짐
+        const hx = m.x + m.dx * m.age, hy = m.y + m.dy * m.age;
+        const sp = Math.hypot(m.dx, m.dy) || 1;
+        for (let j = 0; j < M_TRAIL; j++) {
+          const f = j / (M_TRAIL - 1);
+          const i = k * M_TRAIL + j;
+          mPos[i * 3] = hx - (m.dx / sp) * m.len * f;
+          mPos[i * 3 + 1] = hy - (m.dy / sp) * m.len * f;
+          mPos[i * 3 + 2] = 0;
+          mA[i] = fade * Math.pow(1 - f, 1.6) * (j === 0 ? 1 : 0.85);
+        }
+      });
+      (mGeo.attributes.position as THREE.BufferAttribute).needsUpdate = true;
+      (mGeo.attributes.aA as THREE.BufferAttribute).needsUpdate = true;
+    };
 
     const uniforms = {
       uTime: { value: 0 },
@@ -399,15 +530,32 @@ export default function BrainField({ className = '', src = SRC, mode = 'image', 
     let manual = false, dragging = false;
     let elev = 0, azim = 0, elevGoal = 0, azimGoal = 0;
     let px0 = 0, py0 = 0;
+    // 터치: 세로로 쓸면 페이지 스크롤(touch-action: pan-y), 가로로 쓸기 시작하면 그때부터 자유 회전.
+    // 짧게 톡 치면 뇌 ↔ IMBY 를 뒤집는다.
+    let touchId = -1, tx0 = 0, ty0 = 0, tt0 = 0, touchArmed = false;
+    const takeOver = () => { if (!manual) { manual = true; elev = ease(v) * TOP; azim = 0; } };
     const onDown = (e: PointerEvent) => {
-      if (!dual || e.pointerType === 'touch' || e.button !== 0) return;
-      if (!manual) { manual = true; elev = ease(v) * TOP; azim = 0; }
+      if (!dual) return;
+      if (e.pointerType === 'touch') {
+        touchId = e.pointerId; tx0 = px0 = e.clientX; ty0 = py0 = e.clientY; tt0 = performance.now(); touchArmed = true;
+        return;
+      }
+      if (e.button !== 0) return;
+      takeOver();
       dragging = true; px0 = e.clientX; py0 = e.clientY;
       el.setPointerCapture?.(e.pointerId);
       el.classList.add('is-dragging');
       e.preventDefault();
     };
     const onDrag = (e: PointerEvent) => {
+      if (touchArmed && e.pointerId === touchId && !dragging) {
+        const dx = e.clientX - tx0, dy = e.clientY - ty0;
+        if (Math.abs(dx) > 8 && Math.abs(dx) > Math.abs(dy)) {
+          takeOver(); dragging = true; touchArmed = false; px0 = e.clientX; py0 = e.clientY;
+          el.classList.add('is-dragging');
+        }
+        return;
+      }
       if (!dragging) return;
       const dx = e.clientX - px0, dy = e.clientY - py0;
       px0 = e.clientX; py0 = e.clientY;
@@ -416,7 +564,19 @@ export default function BrainField({ className = '', src = SRC, mode = 'image', 
       elev = Math.max(-0.45, Math.min(TOP, elev - dy * 0.007));
       elevGoal = elev; azimGoal = azim;
     };
-    const onUp = () => {
+    const onUp = (e?: PointerEvent) => {
+      if (touchArmed && e && e.pointerId === touchId) {
+        touchArmed = false;
+        const moved = Math.hypot(e.clientX - tx0, e.clientY - ty0);
+        if (e.type === 'pointerup' && moved < 10 && performance.now() - tt0 < 350) {
+          // 톡: 지금 보이는 쪽의 반대로 넘긴다
+          takeOver();
+          const az = Math.atan2(Math.sin(azim), Math.cos(azim));
+          azimGoal = azim - az;
+          elevGoal = elev > TOP / 2 ? 0 : TOP;
+        }
+        return;
+      }
       if (!dragging) return;
       dragging = false;
       el.classList.remove('is-dragging');
@@ -431,6 +591,7 @@ export default function BrainField({ className = '', src = SRC, mode = 'image', 
       window.addEventListener('pointermove', onDrag);
       window.addEventListener('pointerup', onUp);
       window.addEventListener('pointercancel', onUp);
+      el.style.touchAction = 'pan-y';
     }
     const loop = () => {
       raf = requestAnimationFrame(loop);
@@ -438,6 +599,9 @@ export default function BrainField({ className = '', src = SRC, mode = 'image', 
       const dt = Math.min(clock.getDelta(), 0.05);
       const t = clock.elapsedTime;
       uniforms.uTime.value = t;
+      starU.uTime.value = t;
+      starU.uFade.value = Math.min(1, starU.uFade.value + dt * 0.35);
+      if (!reduced) updateMeteors(dt);
       // 스크롤: 첫 화면에선 모여 있고, 내려갈수록 흩어지고, 다시 올리면 모인다
       if (geo && seenAt >= 0 && performance.now() / 1000 - seenAt >= delay / 1000) intro = Math.min(1, intro + dt * 0.6);
       const rect = el.getBoundingClientRect();
@@ -504,6 +668,10 @@ export default function BrainField({ className = '', src = SRC, mode = 'image', 
       window.removeEventListener('pointercancel', onUp);
       geo?.dispose();
       mat?.dispose();
+      starGeo?.dispose();
+      mGeo?.dispose();
+      mMat?.dispose();
+      starMat?.dispose();
       renderer.dispose();
       renderer.forceContextLoss();
       renderer.domElement.remove();

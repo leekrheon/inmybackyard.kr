@@ -1,4 +1,5 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
+import { pickEn, useLang } from './i18n';
 import { supabase, type Opening, type PressItem, type Project, type TeamMember } from './supabase';
 import { PROJECTS, TEAM } from '../data/content';
 import { CLIENT_LOGOS } from './brand';
@@ -25,11 +26,17 @@ function useQuery<T>(run: () => PromiseLike<{ data: T | null; error: unknown }>,
   return state;
 }
 
+/** 고른 언어로 바꿔 돌려준다 — 영어일 때 각 행의 en(jsonb) 값이 원문을 덮는다 */
+function useLocalized<T extends Record<string, unknown>>(q: State<T[]>): State<T[]> {
+  const { lang } = useLang();
+  return useMemo(() => (lang === 'en' ? { ...q, data: q.data.map((r) => pickEn(r, lang)) } : q), [q, lang]);
+}
+
 export const useProjects = () =>
-  useQuery<Project[]>(
+  useLocalized(useQuery<Project[]>(
     () => supabase.from('projects').select('*').eq('published', true).order('sort_order').order('year', { ascending: false }),
     PROJECTS,
-  );
+  ));
 
 export const useProject = (slug: string) => {
   const all = useProjects();
@@ -59,4 +66,4 @@ export const useClients = () =>
   );
 
 export const useOpenings = () =>
-  useQuery<Opening[]>(() => supabase.from('openings').select('*').eq('is_open', true).order('sort_order'), []);
+  useLocalized(useQuery<Opening[]>(() => supabase.from('openings').select('*').eq('is_open', true).order('sort_order'), []));

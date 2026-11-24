@@ -24,3 +24,53 @@
 .cw__item img { filter: none; opacity: 1; transition: opacity 0.5s var(--soft, var(--ease)), transform 0.6s var(--soft, var(--ease)); }
 .cw__grid:hover .cw__item img { opacity: 0.4; }
 .cw__grid .cw__item:hover img { opacity: 1; transform: scale(1.04); }
+
+/* =====================================================================
+   B안 — 스크롤 고정형 (InsightScroll, ?ins=b)
+   섹션 높이 = 장면 수 × 화면 높이. 안쪽은 화면에 붙어 있고 장면만 바뀐다.
+   ===================================================================== */
+.isx { position: relative; border-top: 1px solid #1f1f1f; }
+.isx__pin { position: sticky; top: var(--header-h); height: calc(100svh - var(--header-h)); display: grid; grid-template-columns: 5fr 7fr; gap: 0 var(--gutter); align-items: center; }
+.isx__side { align-self: stretch; display: flex; flex-direction: column; justify-content: space-between; padding-block: clamp(40px, 6vh, 72px); }
+.isx__title { font-size: clamp(2rem, 3.2vw, 3rem); font-weight: 700; letter-spacing: -0.045em; line-height: 1.12; word-break: keep-all; }
+
+.isx__steps { display: grid; gap: 0; max-width: 420px; }
+.isx__steps li { position: relative; border-top: 1px solid #262626; }
+.isx__steps button { display: grid; grid-template-columns: 1fr; align-items: baseline; width: 100%; padding: 16px 0 18px; text-align: left; color: #4a4a4a; transition: color 0.4s; }
+.isx__steps li.is-done button { color: #8a8a8a; }
+.isx__steps li.is-on button, .isx__steps button:hover { color: #fff; }
+.isx__no { font-size: 13px; font-weight: 600; }
+.isx__name { font-size: 15px; font-weight: 600; letter-spacing: -0.01em; line-height: 1.45; word-break: keep-all; }
+/* 진행 막대: 지금 장면을 읽는 만큼 위쪽 선이 흰색으로 차오른다 */
+.isx__bar { position: absolute; left: 0; right: 0; top: -1px; height: 1px; background: #fff; transform-origin: left center; transform: scaleX(0); }
+
+.isx__main { display: grid; grid-template-rows: minmax(0, 1fr) auto; height: 100%; padding-block: clamp(24px, 4vh, 48px); min-height: 0; }
+.isx__stage { position: relative; min-height: 0; }
+.isx__stage .brain { position: absolute; inset: 0; opacity: 0; transition: opacity 0.9s var(--ease); }
+.isx__stage .brain.is-ready { opacity: 1; }
+.isx__stage canvas { display: block; }
+
+.isx__copy { max-width: 36em; animation: isxIn 0.7s var(--ease) both; }
+@keyframes isxIn { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+.isx__no-big { font-size: 13px; font-weight: 600; color: #fff; margin-bottom: 12px; }
+.isx__no-big span { color: var(--g2); }
+.isx__t { font-size: clamp(1.375rem, 2vw, 1.875rem); font-weight: 700; letter-spacing: -0.035em; line-height: 1.25; margin-bottom: 14px; word-break: keep-all; }
+.isx__d { font-size: clamp(0.9375rem, 1.1vw, 1.0625rem); font-weight: 400; line-height: 1.8; color: #cfcfcf; word-break: keep-all; }
+.isx__hand { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px 24px; margin-top: 18px; }
+.isx__hand li { display: grid; gap: 2px; }
+.isx__hand strong { font-size: 13px; font-weight: 700; }
+.isx__hand em { font-style: normal; font-size: 12px; line-height: 1.55; color: #9a9a9a; word-break: keep-all; }
+
+@media (max-width: 900px) {
+  .isx__pin { grid-template-columns: 1fr; grid-template-rows: auto minmax(0, 1fr); align-items: stretch; }
+  .isx__side { padding-block: 20px 0; gap: 16px; }
+  .isx__title { font-size: 1.5rem; }
+  .isx__steps { display: flex; gap: 14px; max-width: none; }
+  .isx__steps li { flex: 1; }
+  .isx__steps button { grid-template-columns: 1fr; padding: 10px 0 0; }
+  .isx__name { display: none; }
+  .isx__main { padding-block: 8px 24px; }
+  .isx__hand { display: none; }
+  .isx__d { font-size: 14px; line-height: 1.7; }
+}
+@media (max-height: 960px) and (min-width: 901px) { .isx__hand em { display: none; } .isx__hand { gap: 6px 24px; } }

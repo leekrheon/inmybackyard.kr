@@ -29,9 +29,10 @@
 .hd__lang { position: relative; display: flex; }
 .hd__langmenu { position: absolute; right: -8px; top: calc(100% + 10px); min-width: 140px; padding: 6px 0; background: #111; border: 1px solid #262626; opacity: 0; transform: translateY(-4px); pointer-events: none; transition: opacity 0.2s, transform 0.25s; }
 .hd__langmenu.is-on { opacity: 1; transform: none; pointer-events: auto; }
-.hd__langmenu li { padding: 9px 16px; font-size: 13px; font-weight: 600; color: var(--g1); white-space: nowrap; }
-.hd__langmenu li.is-on { color: var(--white); }
-.hd__langmenu em { margin-left: 6px; font-style: normal; font-size: 11px; color: var(--g2); }
+.hd__langmenu button { display: block; width: 100%; padding: 9px 16px; text-align: left; font-size: 13px; font-weight: 600; color: var(--g1); white-space: nowrap; transition: color 0.2s; }
+.hd__langmenu button:hover, .hd__langmenu button.is-on { color: var(--white); }
+.hd__langmenu button:disabled { color: #555; cursor: default; }
+.hd__langmenu em { margin-left: 8px; font-style: normal; font-size: 11px; color: #555; }
 .hd__clock { display: inline-flex; align-items: center; gap: 8px; font-size: 12px; font-weight: 600; color: var(--g1); }
 .hd__clock i { width: 6px; height: 6px; border-radius: 50%; background: var(--dot); animation: live 2s ease-in-out infinite; }
 @keyframes live { 50% { opacity: 0.25; } }

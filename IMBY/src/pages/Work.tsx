@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
+import { useLang } from '../lib/i18n';
 import { useLocation } from 'react-router-dom';
 import { useSearchParams } from 'react-router-dom';
 import { useProjects } from '../lib/data';
@@ -13,6 +14,7 @@ const match = (cat: string, p: { category: string; services: string[] | null }) 
 
 function Dropdown({ label, value, options, onChange }: { label: string; value: string; options: string[]; onChange: (v: string) => void }) {
   const [open, setOpen] = useState(false);
+  const { t } = useLang();
   return (
     <div className={`dd ${open ? 'is-open' : ''}`} onMouseLeave={() => setOpen(false)}>
       <button className="dd__btn" onClick={() => setOpen((v) => !v)} aria-expanded={open}>
@@ -21,7 +23,7 @@ function Dropdown({ label, value, options, onChange }: { label: string; value: s
       </button>
       <ul className="dd__menu" role="listbox">
         {options.map((o) => (
-          <li key={o}><button role="option" aria-selected={o === value} className={o === value ? 'is-on' : ''} onClick={() => { onChange(o); setOpen(false); }}>{o === 'All' ? '전체' : o}</button></li>
+          <li key={o}><button role="option" aria-selected={o === value} className={o === value ? 'is-on' : ''} onClick={() => { onChange(o); setOpen(false); }}>{o === 'All' ? t('전체', 'All') : o}</button></li>
         ))}
       </ul>
     </div>
@@ -30,7 +32,8 @@ function Dropdown({ label, value, options, onChange }: { label: string; value: s
 
 /** Work 한 페이지: 클라이언트 3D 픽셀 로고 → 필터 → 모자이크. */
 export default function Work() {
-  useDocTitle('Work — IMBY', 'IMBY의 캠페인과 프로젝트.');
+  const { t } = useLang();
+  useDocTitle('Work — IMBY', t('IMBY의 캠페인과 프로젝트.', 'Campaigns and projects by IMBY.'));
   const { data } = useProjects();
   const { hash } = useLocation();
   useEffect(() => {
@@ -62,7 +65,7 @@ export default function Work() {
       </div>
       <section className="wkx__list wrap" key={`${cat}-${year}`}>
         <WorkMosaic items={list} />
-        {list.length === 0 && <p className="g2" style={{ padding: '80px 0' }}>조건에 맞는 작업이 없습니다.</p>}
+        {list.length === 0 && <p className="g2" style={{ padding: '80px 0' }}>{t('조건에 맞는 작업이 없습니다.', 'No work matches these filters.')}</p>}
       </section>
     </>
   );

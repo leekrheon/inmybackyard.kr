@@ -20,20 +20,20 @@ export default function Footer() {
     <>
       <footer className="ft wrap">
         <div className="ft__brand">
-          <Link to="/" aria-label="IMBY 홈"><img src="/brand/imby-logo-white.png" alt="IMBY" width="616" height="238" /></Link>
+          <Link to="/" aria-label="IMBY Home"><img src="/brand/imby-logo-white.png" alt="IMBY" width="616" height="238" /></Link>
           <p className="g2">ⓒ IMBY — IN MY BACKYARD. ALL RIGHTS RESERVED.</p>
         </div>
-        <nav className="ft__links" aria-label="하단 메뉴">
+        <nav className="ft__links" aria-label="Footer menu">
           <Link to="/work">Work</Link>
           <Link to="/about">About</Link>
           <Link to="/press">Press</Link>
           <Link to="/contact">Contact</Link>
         </nav>
         <div className="ft__contact">
-          <a href="mailto:idealee@inmybackyard.kr">idealee@inmybackyard.kr</a>
+          <a href="mailto:support@inmybackyard.kr">support@inmybackyard.kr</a>
         </div>
       </footer>
-      <button className={`totop ${show ? 'is-on' : ''}`} onClick={top} aria-label="맨 위로">
+      <button className={`totop ${show ? 'is-on' : ''}`} onClick={top} aria-label="Back to top">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true"><path d="M12 20V4.5M5.5 10.5 12 4l6.5 6.5" /></svg>
       </button>
     </>

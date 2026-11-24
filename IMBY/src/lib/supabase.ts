@@ -8,6 +8,8 @@ const key = (import.meta.env.VITE_IMBY_SUPABASE_ANON_KEY as string | undefined) 
 export const supabase = createClient(url, key);
 
 export type Project = {
+  /** 영어 덮어쓰기 (관리자에서 편집) */
+  en?: Record<string, unknown> | null;
   id: string;
   slug: string;
   title: string;
@@ -76,6 +78,7 @@ export type PressItem = {
 };
 
 export type Opening = {
+  en?: Record<string, unknown> | null;
   id: string;
   title: string;
   team: string | null;

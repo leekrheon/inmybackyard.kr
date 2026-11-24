@@ -197,7 +197,7 @@ export const TEAM: TeamMember[] = [
     one_liner: 'Every good idea needs a reason it has to be that way.',
     education: 'Sogang University, Journalism & Strategic Communication',
     career: ['Marketing Lead, Chamchi (politics-tech startup) · 9M+ SNS views', 'Co-founder & PM, GOONGNORI · Minister of Education Award', 'BZCF Fellowship, 3rd cohort', 'Hanseong Son Jae-han Scholarship Foundation, 10th', 'ADsP Certified'],
-    link_url: 'mailto:idealee@inmybackyard.kr',
+    link_url: 'mailto:support@inmybackyard.kr',
     photo_url: '/media/team-juheon-3.jpg',
     sort_order: 1,
   }),
