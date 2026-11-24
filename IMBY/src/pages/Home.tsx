@@ -84,7 +84,7 @@ function ContactCta() {
 }
 
 export default function Home() {
-  useDocTitle('IMBY — In My BackYard, Creative & Insight Agency');
+  useDocTitle('IMBY 임비', 'Creative Insight Company. AI가 대체할 수 없는 창의적인 인사이트를 만듭니다.');
   useEffect(() => {
     const t = window.setTimeout(() => ScrollTrigger.refresh(), 400);
     return () => window.clearTimeout(t);
