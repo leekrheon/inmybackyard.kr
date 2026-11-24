@@ -1,0 +1,72 @@
+/* =====================================================================
+   Contact — About · Work 와 같은 결: 왼쪽 고정 헤드라인, 오른쪽 번호 목록.
+   상자·테두리·채운 버튼 없이 글자와 가는 선만 쓴다.
+   ===================================================================== */
+
+/* Client / Coffee Chat — 큰 글자 두 개, 고른 쪽만 흰색 */
+.cx { display: flex; gap: clamp(28px, 4vw, 64px); margin-bottom: 0; padding-bottom: clamp(20px, 2vw, 28px); background: none; border: 0; border-bottom: 1px solid #262626; }
+.cx button { display: inline-flex; align-items: baseline; gap: 12px; padding: 0; background: none; color: #4a4a4a; transition: color 0.3s; }
+.cx button span { font-size: clamp(1.75rem, 3.2vw, 3rem); font-weight: 700; letter-spacing: -0.045em; line-height: 1; }
+.cx button em { font-style: normal; font-size: 13px; font-weight: 600; color: inherit; }
+.cx button:hover { background: none; color: #9a9a9a; }
+.cx button.is-on, .cx button.is-on em { background: none; color: #fff; }
+.cx button:hover span { transform: none; }
+@media (max-width: 640px) { .cx button { flex-direction: row; } .cx button em { display: none; } }
+
+/* 본문: 왼쪽 고정 · 오른쪽 목록 (About .nl 과 같은 비율) */
+.ct { grid-template-columns: 5fr 7fr; gap: 0 var(--gutter); padding-top: clamp(64px, 7vw, 112px); padding-bottom: 0; }
+.ct__aside { gap: 0; top: calc(var(--header-h) + 32px); }
+.ct__h { font-size: clamp(2rem, 3.2vw, 3rem); font-weight: 700; letter-spacing: -0.045em; line-height: 1.12; word-break: keep-all; }
+.ct__lead { max-width: 24em; margin-top: clamp(20px, 2vw, 28px); font-size: clamp(1rem, 1.25vw, 1.125rem); font-weight: 500; line-height: 1.85; color: #cfcfcf; word-break: keep-all; }
+.ct__mail { justify-self: start; margin-top: clamp(28px, 3vw, 44px); font-size: 15px; font-weight: 600; border-bottom: 1px solid currentColor; padding-bottom: 2px; transition: opacity 0.25s; }
+.ct__mail:hover { opacity: 0.6; }
+
+.ct__form { gap: 0; }
+.ct__step { position: relative; display: grid; grid-template-columns: 96px 1fr; column-gap: 0; row-gap: 22px; margin: 0; padding: 0 0 clamp(44px, 4.4vw, 64px); border: 0; border-bottom: 1px solid #262626; margin-bottom: clamp(32px, 3vw, 48px); min-width: 0; }
+.ct__step > * { grid-column: 2; }
+.ct__no { grid-column: 1; grid-row: 1; float: none; padding: 6px 0 0; font-size: 13px; font-weight: 600; color: var(--g2); }
+.ct__q { grid-row: 1; font-size: clamp(1.25rem, 1.8vw, 1.625rem); font-weight: 700; letter-spacing: -0.03em; line-height: 1.3; }
+.ct__q span { margin-left: 8px; font-size: 13px; font-weight: 600; letter-spacing: 0; color: var(--g2); }
+
+/* 선택지: 상자 없이 글자만. 고르면 흰색 + 밑줄 */
+.chips { gap: 12px clamp(20px, 2vw, 32px); }
+.chip { height: auto; padding: 4px 0; border: 0; border-bottom: 1px solid transparent; background: none; font-size: 16px; font-weight: 600; color: #6b6b6b; }
+.chip:hover { color: #cfcfcf; border-color: transparent; }
+.chip.is-on { background: none; color: #fff; border-color: #fff; }
+
+/* 입력칸: 밑줄 하나 */
+.fields { gap: 28px var(--gutter); }
+.field { gap: 6px; }
+.field__l { font-size: 13px; font-weight: 600; color: var(--g2); }
+.field input, .field textarea { padding: 10px 0 12px; background: transparent; border: 0; border-bottom: 1px solid #3a3a3a; font-size: 17px; font-weight: 500; color: #fff; }
+.field textarea { min-height: 140px; line-height: 1.7; }
+.field input:focus, .field textarea:focus { border-color: #fff; }
+.field textarea::placeholder { color: #4d4d4d; }
+
+.ct__send { display: grid; gap: 28px; justify-items: start; padding-left: 96px; padding-bottom: clamp(96px, 10vw, 150px); }
+.agree { font-size: 13px; color: var(--g2); }
+.ct__done { gap: 0; padding-bottom: clamp(96px, 10vw, 150px); }
+
+@media (max-width: 900px) {
+  .ct { grid-template-columns: 1fr; }
+  .ct__aside { margin-bottom: clamp(48px, 8vw, 72px); }
+  .ct__step { grid-template-columns: 44px 1fr; }
+  .ct__send { padding-left: 44px; }
+}
+@media (max-width: 560px) { .fields { grid-template-columns: 1fr; } }
+
+/* ---------- Coffee Chat: 같은 결로 — 회색 상자 대신 가는 선과 글자 ---------- */
+.cc { padding-top: clamp(64px, 7vw, 112px); gap: clamp(56px, 6vw, 88px); }
+.cc__intro p:first-child { font-size: clamp(1.25rem, 1.8vw, 1.625rem); font-weight: 700; letter-spacing: -0.03em; line-height: 1.4; }
+.cc__step { gap: 28px; padding-top: 0; }
+.cc__h { font-size: clamp(1.25rem, 1.8vw, 1.625rem); font-weight: 700; letter-spacing: -0.03em; }
+
+.menu { gap: 0 var(--gutter); }
+.menu__item { min-height: 0; padding: 18px 0 22px; background: none; color: #6b6b6b; border-top: 1px solid #2a2a2a; transition: color 0.25s, border-color 0.25s; }
+.menu__item:hover { background: none; color: #cfcfcf; }
+.menu__item.is-on { background: none; color: #fff; border-top-color: #fff; }
+.menu__price { border-top: 0; padding-top: 16px; text-align: left; justify-self: start; }
+
+.cal__cell { background: transparent; border: 1px solid #1f1f1f; }
+.cal__cell:hover { background: #151515; }
+.cal__cell.is-on { background: #fff; border-color: #fff; }

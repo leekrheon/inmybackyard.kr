@@ -17,6 +17,7 @@ import './styles/v6.css';
 import './styles/motion.css';
 import './styles/insight.css';
 import './styles/links.css';
+import './styles/contact2.css';
 import Layout from './components/Layout';
 import Home from './pages/Home';
 import About from './pages/About';

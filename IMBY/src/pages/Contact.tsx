@@ -57,41 +57,51 @@ function ClientForm() {
   };
 
   return (
-    <>
-      <section className="wrap ct">
-        <aside className="ct__aside">
-          <p className="cx__lead">브리프가 정리되지 않았어도 괜찮습니다. 문제 정의부터 함께합니다.</p>
-          <a className="cx__mail" href="mailto:idealee@inmybackyard.kr">idealee@inmybackyard.kr</a>
-        </aside>
+    <section className="wrap ct">
+      <aside className="ct__aside">
+        <h2 className="ct__h">문제를 같이 고민할<br />뇌가 필요하다면.</h2>
+        <p className="ct__lead">브리프가 정리되지 않았어도 괜찮습니다. 문제 정의부터 함께합니다.</p>
+        <a className="ct__mail" href="mailto:idealee@inmybackyard.kr">idealee@inmybackyard.kr</a>
+      </aside>
 
-        {state === 'done' ? (
-          <div className="ct__done">
-            <p className="sec-title">문의가 접수되었습니다.</p>
-            <p className="t-body">남겨주신 이메일로 담당자가 직접 회신드리겠습니다.</p>
-          </div>
-        ) : (
-          <form className="ct__form" onSubmit={submit} noValidate>
-            <fieldset className="fs"><legend className="fs__l">관심 분야 <span className="g2">(복수 선택)</span></legend>
-              <Chips options={SERVICES} value={services} onChange={setServices} multi /></fieldset>
-            <fieldset className="fs"><legend className="fs__l">예산</legend>
-              <Chips options={BUDGETS} value={budget} onChange={setBudget} /></fieldset>
-            <fieldset className="fs"><legend className="fs__l">일정</legend>
-              <Chips options={TIMELINES} value={timeline} onChange={setTimeline} /></fieldset>
+      {state === 'done' ? (
+        <div className="ct__done">
+          <p className="ct__h">문의가 접수되었습니다.</p>
+          <p className="ct__lead">남겨주신 이메일로 담당자가 직접 회신드리겠습니다.</p>
+        </div>
+      ) : (
+        <form className="ct__form" onSubmit={submit} noValidate>
+          <fieldset className="ct__step"><span className="ct__no tnum" aria-hidden="true">01</span>
+            <p className="ct__q">관심 분야 <span>복수 선택</span></p>
+            <Chips options={SERVICES} value={services} onChange={setServices} multi /></fieldset>
+          <fieldset className="ct__step"><span className="ct__no tnum" aria-hidden="true">02</span>
+            <p className="ct__q">예산</p>
+            <Chips options={BUDGETS} value={budget} onChange={setBudget} /></fieldset>
+          <fieldset className="ct__step"><span className="ct__no tnum" aria-hidden="true">03</span>
+            <p className="ct__q">일정</p>
+            <Chips options={TIMELINES} value={timeline} onChange={setTimeline} /></fieldset>
+          <fieldset className="ct__step"><span className="ct__no tnum" aria-hidden="true">04</span>
+            <p className="ct__q">연락처</p>
             <div className="fields">
               <label className="field"><span className="field__l">이름 *</span><input name="name" required autoComplete="name" maxLength={60} /></label>
               <label className="field"><span className="field__l">회사 / 브랜드</span><input name="company" autoComplete="organization" maxLength={120} /></label>
               <label className="field"><span className="field__l">이메일 *</span><input name="email" type="email" required autoComplete="email" maxLength={200} /></label>
               <label className="field"><span className="field__l">연락처</span><input name="phone" type="tel" autoComplete="tel" maxLength={30} /></label>
-              <label className="field field--full"><span className="field__l">문의 내용 *</span><textarea name="message" rows={6} required maxLength={4000} placeholder="브랜드가 지금 붙잡고 있는 고민을 적어주세요." /></label>
-              <input className="hp" name="website" tabIndex={-1} autoComplete="off" aria-hidden="true" />
             </div>
+          </fieldset>
+          <fieldset className="ct__step"><span className="ct__no tnum" aria-hidden="true">05</span>
+            <p className="ct__q">문의 내용 *</p>
+            <label className="field field--full"><span className="sr-only">문의 내용</span><textarea name="message" rows={5} required maxLength={4000} placeholder="브랜드가 지금 붙잡고 있는 고민을 적어주세요." /></label>
+            <input className="hp" name="website" tabIndex={-1} autoComplete="off" aria-hidden="true" />
+          </fieldset>
+          <div className="ct__send">
             <label className="agree"><input type="checkbox" name="agree" /> <span>문의 회신을 위한 개인정보(이름, 이메일, 연락처) 수집·이용에 동의합니다.</span></label>
             {err && <p className="ct__err" role="alert">{err}</p>}
-            <button className="pill pill--lg pill--solid" disabled={state === 'sending'}>{state === 'sending' ? '보내는 중…' : '문의하기'}</button>
-          </form>
-        )}
-      </section>
-    </>
+            <button className="pill pill--lg" disabled={state === 'sending'}>{state === 'sending' ? '보내는 중…' : '문의하기'}</button>
+          </div>
+        </form>
+      )}
+    </section>
   );
 }
 
