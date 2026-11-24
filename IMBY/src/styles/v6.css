@@ -15,14 +15,12 @@
 
 /* ---------- Work 상세 ---------- */
 .wdc { padding-top: calc(var(--header-h) + clamp(28px, 3vw, 48px)); }
-.wdc__back { display: inline-flex; align-items: center; gap: 8px; height: 34px; padding: 0 16px; border: 1px solid #5c5c5c; border-radius: 999px; font-size: 12px; font-weight: 600; transition: border-color 0.25s; }
-.wdc__back svg { width: 14px; height: 14px; }
-.wdc__back:hover { border-color: #fff; }
+.wdc__back { display: inline-grid; place-items: center; width: 32px; height: 32px; margin-left: -4px; color: #fff; transition: opacity 0.25s; }
+.wdc__back svg, .wdc__share svg { width: 24px; height: 24px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.wdc__back:hover, .wdc__share:hover { opacity: 0.6; }
 .wdc__titles { display: flex; align-items: flex-start; justify-content: space-between; gap: 24px; margin-top: clamp(24px, 3vw, 40px); }
 .wdc__title { max-width: 22em; font-size: clamp(1.75rem, 3.2vw, 3rem); font-weight: 700; letter-spacing: -0.035em; line-height: 1.25; }
-.wdc__share { flex: none; display: grid; place-items: center; width: 44px; height: 44px; border: 1px solid #5c5c5c; border-radius: 50%; transition: border-color 0.25s; }
-.wdc__share:hover { border-color: #fff; }
-.wdc__share svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 1.4; }
+.wdc__share { flex: none; display: inline-grid; place-items: center; width: 32px; height: 32px; margin-right: -4px; color: #fff; transition: opacity 0.25s; }
 .wdc__copied { font-size: 9px; font-weight: 700; }
 .wdc__client { margin-top: 14px; font-size: 15px; font-weight: 600; color: var(--g2); }
 
@@ -214,7 +212,7 @@
 .crow { padding-bottom: clamp(40px, 5vw, 72px); margin-bottom: clamp(32px, 4vw, 56px); border-bottom: 1px solid #2a2a2a; }
 .crow__grid { display: grid; grid-template-columns: repeat(var(--n, 4), minmax(0, 1fr)); gap: clamp(12px, 2vw, 32px) clamp(16px, 2.4vw, 40px); }
 .crow__link { display: block; }
-.crow__fx { position: relative; aspect-ratio: 2 / 1; }
+.crow__fx { position: relative; aspect-ratio: 2 / 1; width: 84%; margin: 0 auto; }
 .crow__fx .brain { position: absolute; inset: 0; opacity: 0; transform: translateY(14px); filter: blur(6px);
   transition: opacity 1.1s var(--soft, var(--ease)), transform 1.3s var(--soft, var(--ease)), filter 1.1s var(--soft, var(--ease));
   transition-delay: calc(var(--i) * 0.3s); }
@@ -238,7 +236,10 @@
 .cs__lead p { max-width: 30em; font-size: clamp(1.25rem, 2vw, 1.75rem); font-weight: 600; letter-spacing: -0.03em; line-height: 1.6; word-break: keep-all; }
 .cs__block { padding-top: clamp(80px, 10vw, 150px); }
 .cs__text { display: grid; grid-template-columns: minmax(0, 3fr) minmax(0, 9fr); gap: var(--gutter); }
-.cs__label { font-size: 13px; font-weight: 800; letter-spacing: 0.06em; color: var(--g2); padding-top: 0.5em; }
+.cs__text .cs__main { grid-column: 2; }
+/* Figma Section 12 의 큰 섹션 글자 (BACKGROUND · PROBLEM · INSIGHT · IDEA · RESULT) */
+.cs__art { --art-u: calc(98px / 1040); padding-top: 0.45em; }
+.cs__art span { display: block; background-color: #737373; -webkit-mask: no-repeat 0 0 / 100% 100%; mask: no-repeat 0 0 / 100% 100%; }
 .cs__h .cs__hl { font-size: clamp(1.625rem, 2.8vw, 2.625rem); font-weight: 700; letter-spacing: -0.04em; line-height: 1.32; word-break: keep-all; }
 .cs__body { display: grid; gap: 1.1em; margin-top: clamp(22px, 2.4vw, 34px); max-width: 44em; }
 .cs__body p { font-size: clamp(1rem, 1.15vw, 1.0625rem); font-weight: 500; line-height: 1.95; color: #cfcfcf; word-break: keep-all; }
@@ -254,6 +255,7 @@
 @media (max-width: 860px) {
   .cs__meta { grid-template-columns: 1fr 1fr; }
   .cs__text { grid-template-columns: 1fr; gap: 12px; }
+  .cs__text .cs__main { grid-column: 1; }
   .cs__imgs.is-grid { grid-template-columns: 1fr; }
 }
 
@@ -263,3 +265,7 @@
 .hw__card:hover .hw__img::after, .hw__card:focus-visible .hw__img::after { opacity: 1; }
 .hw__card:hover .hw__img img.hw__logo, .hw__card:focus-visible .hw__img img.hw__logo { opacity: 1; transform: translate(-50%, -50%); }
 .hw__grid:has(.hw__card:hover) .hw__card:not(:hover) .hw__img img { filter: none; }
+
+/* Press: 기사가 없을 때 */
+.pr-empty { padding-top: calc(var(--header-h) + clamp(64px, 8vw, 120px)); padding-bottom: clamp(120px, 14vw, 200px); display: grid; gap: 20px; }
+.pr-empty__t { font-size: clamp(3.5rem, 7.4vw, 7.5rem); font-weight: 700; letter-spacing: -0.05em; line-height: 1; }

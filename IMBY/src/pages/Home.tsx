@@ -48,7 +48,7 @@ function Kv() {
 /* ------------------------------------------------------------------ */
 function WorkGrid() {
   const { data } = useProjects();
-  const list = data.filter((p) => p.thumbnail_url || p.cover_url).slice(0, 7);
+  const list = data.filter((p) => p.thumbnail_url || p.cover_url);
   return (
     <section className="hw wrap">
       <div className="hw__head">

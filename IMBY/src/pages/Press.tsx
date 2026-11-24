@@ -9,17 +9,10 @@ import { useDocTitle } from '../lib/useDocTitle';
  * 1) 맨 위: 가장 최신 기사 배너 — 왼쪽 헤드라인, 오른쪽 큰 사진. 여러 개면 자동으로 넘어간다.
  * 2) 그 아래: 카드 줄 + 연도 필터 표.
  * 외부 기사(관리자에서 URL만 넣으면 자동 수집)는 클릭하면 원문 기사로 새 창에서 이동한다.
- * 외부 기사가 없으면 IMBY 소식(작업 · 수상)으로 채운다.
+ * 모든 기사는 관리자 › Press 에서 등록한다 (코드에 적어 둔 기사는 없다).
  */
 type Row = { id: string; title: string; desc: string; source: string; date: string; img: string | null; href: string; external: boolean };
 
-const NEWS: Row[] = [
-  { id: 'n1', title: '성수 클럽하우스 외벽 광고, 광고비 없이 매거진 6곳 이상에 소개', desc: '', source: 'Earned Media', date: '2026-11-03', img: '/media/narrative-ooh-1.jpg', href: '/work/narrative-seongsu-ooh', external: false },
-  { id: 'n2', title: 'THE 해커톤 본편, EO · BZCF · 더해커톤 유튜브 공개 — 후반 마케팅 총괄', desc: '', source: 'IMBY News', date: '2026-08-15', img: '/media/hackathon-screening-1.jpg', href: '/work/the-hackathon', external: false },
-  { id: 'n3', title: 'Tiro AI 회의록 「사관」 캠페인, 강남 OOH · 버스 · 필름으로 집행', desc: '', source: 'IMBY News', date: '2026-08-01', img: '/media/tiro-sagwan-1.jpg', href: '/work/tiro-sagwan', external: false },
-  { id: 'n4', title: '락인커피 캐릭터 IP 「제갈궁뎅」 공개', desc: '', source: 'IMBY News', date: '2026-08-01', img: '/media/lockin-mock.jpg', href: '/work/lockin-coffee', external: false },
-  { id: 'n5', title: '로컬히어로즈100 창업경진대회 대상 · 교육부장관상 수상 (110+팀 중 1위)', desc: '', source: 'Award', date: '2025-12-01', img: '/media/goongnori.jpg', href: '/work', external: false },
-];
 
 const fmt = (d: string) => d.replaceAll('-', '.');
 
@@ -99,9 +92,9 @@ export default function Press() {
     })),
     [data],
   );
-  const rows: Row[] = useMemo(() => [...external, ...NEWS].sort((a, b) => b.date.localeCompare(a.date)), [external]);
-  // 배너: 언론 기사가 있으면 최신 기사 5개, 없으면 IMBY 소식 최신 3개
-  const banner = external.length ? [...external].sort((a, b) => b.date.localeCompare(a.date)).slice(0, 5) : rows.slice(0, 3);
+  const rows: Row[] = useMemo(() => [...external].sort((a, b) => b.date.localeCompare(a.date)), [external]);
+  // 배너: 최신 기사 5개
+  const banner = rows.slice(0, 5);
   const years = ['All', ...Array.from(new Set(rows.map((r) => r.date.slice(0, 4)).filter(Boolean)))];
   const [year, setYear] = useState('All');
   const list = rows.filter((r) => year === 'All' || r.date.startsWith(year));
@@ -110,7 +103,14 @@ export default function Press() {
     <>
       {loading ? <div className="prb prb--ph" /> : <Banner rows={banner} />}
 
-      {!loading && (
+      {!loading && rows.length === 0 && (
+        <section className="wrap pr-empty">
+          <h1 className="pr-empty__t">Press</h1>
+          <p className="g2">아직 등록된 기사가 없습니다.</p>
+        </section>
+      )}
+
+      {!loading && rows.length > 0 && (
         <>
           <div className="pr-cards" data-lenis-prevent>
             {rows.slice(0, 5).map((r, i) => (

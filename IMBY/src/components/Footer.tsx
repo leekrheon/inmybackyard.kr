@@ -34,7 +34,7 @@ export default function Footer() {
         </div>
       </footer>
       <button className={`totop ${show ? 'is-on' : ''}`} onClick={top} aria-label="맨 위로">
-        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.6" aria-hidden="true"><path d="M8 13.5V3M3.5 7.5 8 3l4.5 4.5" /></svg>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true"><path d="M12 20V4.5M5.5 10.5 12 4l6.5 6.5" /></svg>
       </button>
     </>
   );

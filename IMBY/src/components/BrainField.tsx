@@ -468,7 +468,8 @@ export default function BrainField({ className = '', src = SRC, mode = 'image', 
         group.position.y = dual ? posY * (1 - e) : posY;
         group.scale.set(1 - str * 0.35, 1 + str, 1);
       }
-      const idle = reduced ? 0 : Math.sin(t * 0.35) * 0.18 * (dual ? 0.12 : 1);
+      // 저절로 흔들리는 폭도 tilt 에 맞춰 줄인다 (로고처럼 차분해야 하는 곳은 tilt 를 낮게)
+      const idle = reduced ? 0 : Math.sin(t * 0.35) * 0.18 * (dual ? 0.12 : Math.min(1, tilt));
       const hover = manual ? 0 : 1; // 직접 돌려 보는 중엔 마우스 기울기를 끈다
       group.rotation.y += ((target.ry + idle) * hover - group.rotation.y) * 0.05;
       group.rotation.x += (target.rx * hover - group.rotation.x) * 0.05;

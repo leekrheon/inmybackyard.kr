@@ -62,8 +62,8 @@ a, button, [role='tab'] {
 
 /* ---------- 텍스트 링크 ---------- */
 .ft__links a, .hd__sub a, .cx__mail, .nh__list a, .wdc__pn-item, .mnav__top { transition: color var(--t-fast) var(--soft), opacity var(--t-fast) var(--soft), background-color var(--t-fast) var(--soft); }
-.wdc__back, .wdc__share { transition: border-color var(--t-fast) var(--soft), background-color var(--t-fast) var(--soft), color var(--t-fast) var(--soft), transform var(--t-fast) var(--soft); }
-.wdc__back:hover, .wdc__share:hover { background: var(--white); color: var(--black); }
+.wdc__back, .wdc__share { transition: opacity var(--t-fast) var(--soft), transform var(--t-fast) var(--soft); }
+.wdc__back:hover, .wdc__share:hover { opacity: 0.6; }
 .wdc__back:active, .wdc__share:active, .totop:active { transform: scale(0.95); }
 
 /* ---------- 카드: 이미지가 천천히 확대, 나머지는 천천히 어두워짐 ---------- */
@@ -71,7 +71,7 @@ a, button, [role='tab'] {
 .pr-card img { transition: transform 1.2s var(--soft); }
 
 /* ---------- 맨 위로 ---------- */
-.totop { transition: opacity var(--t-fast) var(--soft), transform var(--t-slow) var(--soft), background-color var(--t-fast) var(--soft); }
+.totop { transition: opacity var(--t-fast) var(--soft), transform var(--t-slow) var(--soft); }
 .totop:hover { transform: translateY(-3px); }
 
 /* ---------- 페이지 전환: 살짝 떠오르며 ---------- */

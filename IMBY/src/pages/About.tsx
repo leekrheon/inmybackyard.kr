@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ScrollTrigger } from '../lib/motion';
 import { useOpenings } from '../lib/data';
@@ -32,10 +32,31 @@ function Hero() {
 /* ---------------- 3–4. 디마원식 번호 목록 ---------------- */
 type Fx = { src: string; mode?: 'image' | 'shape'; grid?: number };
 type Item = { t: string; d: string; proof?: string; img?: string; fx?: Fx };
-function NumberedList({ title, items, id }: { title: [string, string]; items: Item[]; id?: string }) {
+function NumberedList({ title, items, id, photos }: { title: [string, string]; items: Item[]; id?: string; photos?: string[] }) {
+  const root = useRef<HTMLElement | null>(null);
+  const [on, setOn] = useState(0);
+  // 오른쪽 목록 중 화면 가운데에 걸린 항목을 따라 왼쪽 사진이 한 장씩 겹쳐 바뀐다
+  useEffect(() => {
+    const el = root.current;
+    if (!el || !photos?.length) return;
+    const lis = Array.from(el.querySelectorAll<HTMLElement>('.nl__item'));
+    const io = new IntersectionObserver((ents) => {
+      ents.forEach((e) => { if (e.isIntersecting) setOn(Math.min(lis.indexOf(e.target as HTMLElement), photos.length - 1)); });
+    }, { rootMargin: '-45% 0px -45% 0px' });
+    lis.forEach((li) => io.observe(li));
+    return () => io.disconnect();
+  }, [photos]);
+  const head = <h2 className="nl__title">{title[0]}<br />{title[1]}</h2>;
   return (
-    <section className="nl wrap" id={id}>
-      <h2 className="nl__title">{title[0]}<br />{title[1]}</h2>
+    <section className={`nl wrap ${photos?.length ? 'nl--photos' : ''}`} id={id} ref={root}>
+      {photos?.length ? (
+        <div className="nl__side">
+          {head}
+          <div className="nl__stack" aria-hidden="true">
+            {photos.map((src, k) => <img key={src} src={src} alt="" loading={k ? 'lazy' : 'eager'} className={k === on ? 'is-on' : ''} />)}
+          </div>
+        </div>
+      ) : head}
       <ol className="nl__list">
         {items.map((it, i) => (
           <Rv as="li" key={it.t} className="nl__item">
@@ -58,6 +79,9 @@ function NumberedList({ title, items, id }: { title: [string, string]; items: It
   );
 }
 
+/** What we believe 왼쪽에 이어지는 팀 사진 (흑백) */
+const BELIEVE_PHOTOS = ['/media/about/believe-1.webp', '/media/about/believe-2.webp', '/media/about/believe-3.webp', '/media/about/believe-4.webp'];
+
 const PHILOSOPHY: Item[] = [
   {
     t: 'Every line needs a reason.',
@@ -65,7 +89,7 @@ const PHILOSOPHY: Item[] = [
     fx: { src: '/brand/relevance.svg', mode: 'shape', grid: 520 },
   },
   {
-    t: 'Ads stick to walls. Stories stick to feeds.',
+    t: 'People don’t share ads, they share stories.',
     d: '사람들은 광고를 공유하지 않습니다. 재밌는 장면을 공유합니다. 그래서 우리는 얼마나 많이 보여줄지보다, 왜 찍어서 올리고 싶어질지를 먼저 고민합니다. 돈으로 산 도달은 집행이 끝나면 멈추지만, 사람들이 스스로 옮긴 이야기는 계속 퍼집니다. 함께하는 사람들도 마찬가지입니다. 섭외하기보다, 먼저 같이 하고 싶어지는 판을 깝니다.',
     fx: { src: '/media/fx-heart.png' },
   },
@@ -146,7 +170,7 @@ export default function About() {
   return (
     <>
       <Hero />
-      <NumberedList title={['What we', 'believe']} items={PHILOSOPHY} />
+      <NumberedList title={['What we', 'believe']} items={PHILOSOPHY} photos={BELIEVE_PHOTOS} />
       <TeamMembers />
       <Founder />
       <Hiring />

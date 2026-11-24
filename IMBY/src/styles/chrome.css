@@ -55,6 +55,6 @@
 .ft__contact { display: grid; justify-items: end; font-size: 13px; font-weight: 600; }
 @media (max-width: 960px) { .ft { grid-template-columns: 1fr; gap: 24px; } .ft__contact { justify-items: start; } }
 
-.totop { position: fixed; right: var(--margin); bottom: 28px; z-index: 50; width: 46px; height: 46px; border-radius: 50%; background: var(--white); color: var(--black); display: grid; place-items: center; opacity: 0; transform: translateY(10px); pointer-events: none; transition: opacity 0.3s, transform 0.4s var(--ease); }
-.totop svg { width: 16px; height: 16px; }
+.totop { position: fixed; right: var(--margin); bottom: 28px; z-index: 50; width: 36px; height: 36px; color: var(--white); mix-blend-mode: difference; display: grid; place-items: center; opacity: 0; transform: translateY(10px); pointer-events: none; transition: opacity 0.3s, transform 0.4s var(--ease); }
+.totop svg { width: 24px; height: 24px; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
 .totop.is-on { opacity: 1; transform: none; pointer-events: auto; }

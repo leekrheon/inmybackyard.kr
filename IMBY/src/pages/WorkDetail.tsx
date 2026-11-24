@@ -28,17 +28,37 @@ function Para({ text, className = '' }: { text: string; className?: string }) {
   );
 }
 
-function Block({ label, title, body, children }: { label: string; title?: string | null; body?: string | null; children?: ReactNode }) {
+/**
+ * 섹션 큰 글자 — Figma IMBY › Section 12(6650-25)의 BACKGROUND · PROBLEM · INSIGHT · IDEA 글자를
+ * 윤곽선 SVG로 뽑아 /brand/labels 에 두었다. (RESULT는 같은 글꼴의 글자를 조합해 만든 것)
+ * 크기는 예전 13px 텍스트 라벨과 같은 폭(BACKGROUND ≈ 98px)으로 맞춘다 — CSS의 --art-u 한 값으로 조정.
+ */
+const ART: Record<string, { src: string; w: number }> = {
+  BACKGROUND: { src: '/brand/labels/background.svg', w: 1040 },
+  PROBLEM: { src: '/brand/labels/problem.svg', w: 711 },
+  INSIGHT: { src: '/brand/labels/insight.svg', w: 603 },
+  IDEA: { src: '/brand/labels/idea.svg', w: 347 },
+  RESULT: { src: '/brand/labels/result.svg', w: 538.2 },
+};
+
+function Block({ label, title, body, children }: { label?: string; title?: string | null; body?: string | null; children?: ReactNode }) {
   if (!title && !body && !children) return null;
+  const art = label ? ART[label] : undefined;
   return (
     <section className="cs__block">
-      <div className="cs__text wrap">
-        <Rv as="p" className="cs__label">{label}.</Rv>
-        <div className="cs__main">
-          {title && <Rv as="h2" className="cs__h"><Para text={title} className="cs__hl" /></Rv>}
-          {body && <Rv className="cs__body" delay={80}><Para text={body} /></Rv>}
+      {(art || title || body) && (
+        <div className="cs__text wrap">
+          {art && (
+            <Rv className="cs__art">
+              <span role="img" aria-label={label} style={{ width: `calc(var(--art-u) * ${art.w})`, aspectRatio: `${art.w} / 161`, WebkitMaskImage: `url(${art.src})`, maskImage: `url(${art.src})` }} />
+            </Rv>
+          )}
+          <div className="cs__main">
+            {title && <Rv as="h2" className="cs__h"><Para text={title} className="cs__hl" /></Rv>}
+            {body && <Rv className="cs__body" delay={80}><Para text={body} /></Rv>}
+          </div>
         </div>
-      </div>
+      )}
       {children}
     </section>
   );
@@ -85,13 +105,12 @@ export default function WorkDetail() {
     <article className="cs">
       <header className="cs__head wrap">
         <div className="cs__top">
-          <button className="wdc__back" onClick={() => (window.history.length > 1 ? nav(-1) : nav('/work'))}>
-            <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M14 8H2.5M7 3.5 2.5 8 7 12.5" fill="none" stroke="currentColor" strokeWidth="1.4" /></svg>
-            back
+          <button className="wdc__back" onClick={() => (window.history.length > 1 ? nav(-1) : nav('/work'))} aria-label="뒤로">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 12H4.5M10.5 5.5 4 12l6.5 6.5" /></svg>
           </button>
           <button className="wdc__share" onClick={share} aria-label="링크 복사">
             {copied ? <span className="wdc__copied">Copied</span> : (
-              <svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="15" cy="4.5" r="2.2" /><circle cx="5" cy="10" r="2.2" /><circle cx="15" cy="15.5" r="2.2" /><path d="M7 9l6-3.4M7 11l6 3.4" /></svg>
+              <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="18" cy="5.5" r="2.6" /><circle cx="6" cy="12" r="2.6" /><circle cx="18" cy="18.5" r="2.6" /><path d="M8.3 10.8l7.4-4M8.3 13.2l7.4 4" /></svg>
             )}
           </button>
         </div>
@@ -113,7 +132,7 @@ export default function WorkDetail() {
       <Block label="INSIGHT" title={p.insight_title} body={p.insight} />
       <Block label="IDEA" title={p.idea_title} body={p.idea} />
       {sections.map((s, i) => (
-        <Block key={i} label={(s.label || 'EXECUTION').toUpperCase()} title={s.title} body={s.body}>
+        <Block key={i} title={s.title} body={s.body}>
           <Images list={s.images} />
         </Block>
       ))}

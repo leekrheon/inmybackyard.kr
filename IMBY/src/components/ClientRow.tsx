@@ -18,7 +18,7 @@ export default function ClientRow() {
         {data.map((c, i) => {
           const fx = (
             <div className="crow__fx">
-              <BrainField src={c.logo_url} mode="shape" grid={520} fit tilt={0.6} dissolve={false} springy={false} assemble={false} />
+              <BrainField src={c.logo_url} mode="shape" grid={520} fit tilt={0.12} dissolve={false} springy={false} assemble={false} />
             </div>
           );
           const ext = c.link && /^https?:\/\//.test(c.link);
