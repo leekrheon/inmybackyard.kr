@@ -29,9 +29,12 @@ export const VERT = /* glsl */ `
   varying float vLum;
   varying float vSpark;
   varying float vVis;
+  varying float vIn;
 
   void main() {
-    vec3 p = mix(aScatter, position, smoothstep(0.0, 1.0, clamp(uIn * 1.25 - aSeed * 0.25, 0.0, 1.0)));
+    float k = smoothstep(0.0, 1.0, clamp(uIn * 1.25 - aSeed * 0.25, 0.0, 1.0));
+    vIn = k;
+    vec3 p = mix(aScatter, position, k);
     // 숨쉬듯 아주 미세한 일렁임
     p += vec3(0.0, 0.0, 1.0) * sin(uTime * 1.3 + position.x * 6.0 + position.y * 4.0) * 0.004;
 
@@ -56,8 +59,9 @@ export const FRAG = /* glsl */ `
   varying float vLum;
   varying float vSpark;
   varying float vVis;
+  varying float vIn;
   void main() {
-    if (vVis < 0.02) discard;
+    if (vVis < 0.02 || vIn < 0.01) discard;
     // 정사각 픽셀 — 가장자리만 살짝 깎아 계단을 줄인다
     vec2 c = abs(gl_PointCoord - 0.5);
     if (max(c.x, c.y) > 0.46) discard;
@@ -67,7 +71,9 @@ export const FRAG = /* glsl */ `
     vec3 col = vLum < 0.5 ? mix(shadow, mid, vLum * 2.0) : mix(mid, hi, (vLum - 0.5) * 2.0);
     col += vSpark * 1.4;
     float a = 0.35 + vLum * 0.65;
-    gl_FragColor = vec4(col, clamp(a + vSpark, 0.0, 1.0) * vVis);
+    // 흩어진 픽셀은 거의 투명했다가 모일수록 또렷해진다 — 캔버스 네모 경계가 드러나지 않게
+    float fade = smoothstep(0.0, 0.75, vIn);
+    gl_FragColor = vec4(col, clamp(a + vSpark, 0.0, 1.0) * vVis * fade);
   }
 `;
 
@@ -295,8 +301,12 @@ export default function BrainField({ className = '', src = SRC, mode = 'image', 
       const seeds = new Float32Array(n), scat = new Float32Array(n * 3);
       for (let i = 0; i < n; i++) {
         seeds[i] = Math.random();
-        const ang = Math.random() * Math.PI * 2, rr = 2.5 + Math.random() * 2;
-        scat[i * 3] = Math.cos(ang) * rr; scat[i * 3 + 1] = Math.sin(ang) * rr; scat[i * 3 + 2] = (Math.random() - 0.5) * 3;
+        // 자기 자리 주변의 부드러운 구름(가우시안)에서 출발 — 멀리 네모 밖에서 날아오지 않는다
+        const g = () => (Math.random() + Math.random() + Math.random() - 1.5) / 1.5;
+        const spread = 0.35 + Math.random() * 0.75;
+        scat[i * 3] = pos[i * 3] * 1.15 + g() * spread;
+        scat[i * 3 + 1] = pos[i * 3 + 1] * 1.15 + g() * spread;
+        scat[i * 3 + 2] = pos[i * 3 + 2] + g() * spread * 1.4;
       }
       geo = new THREE.BufferGeometry();
       geo.setAttribute('position', new THREE.BufferAttribute(pos, 3));
@@ -333,10 +343,14 @@ export default function BrainField({ className = '', src = SRC, mode = 'image', 
 
       // ---------- 이중 투영 ----------
       // 위에서 볼 글자(IMBY)는 크롬 도형으로 샘플링하고, 뇌의 가로 폭에 맞춰 x를 정렬한다
-      const B = sample(img2, 'shape', 260, topCrop);
+      const B = sample(img2, 'shape', 260, topCrop, true);
       let minX = Infinity, maxX = -Infinity, minY = Infinity, maxY = -Infinity;
       A.xs.forEach((x) => { if (x < minX) minX = x; if (x > maxX) maxX = x; });
       A.ys.forEach((y) => { if (y < minY) minY = y; if (y > maxY) maxY = y; });
+      // 뇌 픽셀 묶음의 가로 중심을 0에 맞춘다 → 위에서 본 IMBY도 화면 가로 정중앙
+      const midX = (minX + maxX) / 2;
+      for (let i = 0; i < A.xs.length; i++) A.xs[i] -= midX;
+      minX -= midX; maxX -= midX;
       const spanX = maxX - minX;
       const C = 240; // 열 개수
       const col = (x: number) => Math.max(0, Math.min(C - 1, Math.floor(((x - minX) / spanX) * C)));

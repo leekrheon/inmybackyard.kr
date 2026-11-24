@@ -211,13 +211,13 @@ dict(
  idea_title='숙성된 와인의 색으로\n신뢰를 말하다',
  idea='충분히 숙성된 레드 와인의 깊은 색 ‘Wine Burgundy(#510B15)’를 메인 컬러로, 오크통의 나뭇결과 코르크에서 가져온 미색 ‘Oak Cask Beige(#FDF7ED)’를 보조 컬러로 정했습니다. 로고의 최소 여백과 금지 사례까지 담은 BI 가이드라인을 수립해, 누가 만들어도 같은 브랜드로 보이게 했습니다.',
  sections=[
-  dict(label='BI GUIDELINE', title='로고와 컬러,\n일관된 시각 언어로', body='채도를 낮춘 버건디로 들뜬 열정 대신 신뢰와 전문성, 시간이 만든 가치를 표현했습니다. 순백 대신 따뜻한 미색을 써 차갑지 않은 여백과 아날로그의 온기를 만들고, 로고의 회전 · 비율 변경 · 그라데이션 등 사용 금지 규칙을 정리했습니다.', images=[f'{W}/nego/bi-system.jpg', '/media/nego-bi.jpg']),
+  dict(label='BI GUIDELINE', title='로고와 컬러,\n일관된 시각 언어로', body='채도를 낮춘 버건디로 들뜬 열정 대신 신뢰와 전문성, 시간이 만든 가치를 표현했습니다. 순백 대신 따뜻한 미색을 써 차갑지 않은 여백과 아날로그의 온기를 만들고, 로고의 회전 · 비율 변경 · 그라데이션 등 사용 금지 규칙을 정리했습니다.', images=[f'{W}/nego/bi-guide.jpg', '/media/nego-bi.jpg']),
   dict(label='SOCIAL', title='퇴근길 1분\n와인 큐레이션', body='기존 콘텐츠를 분석해 ‘1,000년의 역사가 와인의 깊이가 되기까지’, ‘퇴근길 1분 와인 큐레이션’처럼 브랜드의 전문성을 쉽게 전하는 소셜 미디어 리브랜딩 방향을 제안했습니다. MCP 연동 AI 콘텐츠 제작 프로세스를 설계해, 최소한의 리소스로도 일관된 콘텐츠를 계속 만들 수 있는 운영 체계를 함께 넘겼습니다.', images=[]),
  ],
  result_title='이름처럼,\n흐름을 잇는 브랜드',
  result='로고와 컬러, 콘텐츠 톤이 하나의 기준 아래 정리되며 Négo는 어느 채널에서든 같은 브랜드로 읽히게 되었습니다. 프로젝트가 끝난 뒤에도 브랜드 팀이 스스로 콘텐츠를 만들 수 있는 가이드와 제작 체계를 남겼습니다.',
  metrics=[dict(value='BI', label='로고 · 컬러 시스템 · 사용 규칙 가이드라인'), dict(value='Social', label='소셜 미디어 리브랜딩 전략 제안'), dict(value='AX', label='MCP 연동 콘텐츠 제작 프로세스 설계')],
- thumbnail_url=f'{W}/nego/bi-system.jpg', cover_url=f'{W}/nego/bi-system.jpg', gallery=[],
+ thumbnail_url=f'{W}/nego/bi-guide.jpg', cover_url=f'{W}/nego/bi-guide.jpg', gallery=[],
 ),
 # 9 ─────────────────────────────────────────────────────────────
 dict(
