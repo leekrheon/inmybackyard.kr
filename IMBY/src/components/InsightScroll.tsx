@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import MorphField from './MorphField';
+import { MorphField } from './LazyGraphic';
 import { getLenis } from '../lib/motion';
 import { INSIGHT_ITEMS, HANDOVER } from './InsightSystem';
 

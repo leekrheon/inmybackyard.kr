@@ -5,7 +5,7 @@ import { useOpenings } from '../lib/data';
 import { useDocTitle } from '../lib/useDocTitle';
 import { Rv } from '../components/Reveal';
 import { TeamMembers } from './Team';
-import BrainField from '../components/BrainField';
+import { BrainField } from '../components/LazyGraphic';
 import { useLocation } from 'react-router-dom';
 
 /**

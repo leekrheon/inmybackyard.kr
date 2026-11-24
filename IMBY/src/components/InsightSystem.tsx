@@ -1,5 +1,5 @@
 import { Rv } from './Reveal';
-import BrainField from './BrainField';
+import { BrainField } from './LazyGraphic';
 
 /**
  * 홈 — "제작은 무한해졌고, 인사이트는 희소해졌습니다."

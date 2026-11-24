@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
 import { useClients } from '../lib/data';
 import { useInView } from './Reveal';
-import BrainField from './BrainField';
+import { BrainField } from './LazyGraphic';
 
 /**
  * Work 상단 클라이언트 줄 — 로고마다 뇌·Relevance와 같은 은색 픽셀 3D.

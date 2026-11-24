@@ -6,7 +6,7 @@ import { useProjects } from '../lib/data';
 import { Statement } from '../components/Titles';
 import ClientWall from '../components/ClientWall';
 import InsightScroll from '../components/InsightScroll';
-import BrainField from '../components/BrainField';
+import { BrainField } from '../components/LazyGraphic';
 import Typewriter from '../components/Typewriter';
 import WorkMosaic from '../components/WorkMosaic';
 import { useDocTitle } from '../lib/useDocTitle';

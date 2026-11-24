@@ -1,6 +1,7 @@
 import { useEffect, useRef } from 'react';
 import * as THREE from 'three';
 import { sample } from './BrainField';
+import { loadGraphic } from '../lib/loadImage';
 
 /**
  * 하나의 은색 픽셀 무리가 여러 그림 사이를 오가는 그래픽.
@@ -61,9 +62,6 @@ const FRAG = /* glsl */ `
   }
 `;
 
-const loadImage = (src: string) => new Promise<HTMLImageElement>((res, rej) => {
-  const im = new Image(); im.onload = () => res(im); im.onerror = rej; im.src = src;
-});
 
 type Props = {
   srcs: string[];
@@ -134,7 +132,7 @@ export default function MorphField({ srcs, index = 0, progress, grid = 300, clas
     io.observe(el);
 
     let geo: THREE.BufferGeometry | null = null, mat: THREE.ShaderMaterial | null = null;
-    Promise.all(srcs.slice(0, 4).map(loadImage)).then((imgs) => {
+    Promise.all(srcs.slice(0, 4).map((s) => loadGraphic(s))).then((imgs) => {
       if (disposed) return;
       const S = imgs.map((im) => sample(im, 'image', grid, undefined, true));
       while (S.length < 4) S.push(S[S.length - 1]);
@@ -175,7 +173,7 @@ export default function MorphField({ srcs, index = 0, progress, grid = 300, clas
       u.uFrom.value = u.uTo.value = progRef.current !== undefined ? Math.round(progRef.current) : idxRef.current;
       smooth = progRef.current ?? 0;
       el.classList.add('is-ready');
-    });
+    }).catch(() => { /* 원본·저용량 모두 실패: 그 자리만 비워 둔다 */ });
 
     const clock = new THREE.Clock();
     const DUR = 1.5; // 한 번 변신에 걸리는 시간(초)

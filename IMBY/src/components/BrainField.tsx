@@ -1,5 +1,6 @@
 import { useEffect, useRef } from 'react';
 import * as THREE from 'three';
+import { loadGraphic } from '../lib/loadImage';
 
 /**
  * Silver Pixel Field — 피그마 AI로 렌더한 크롬 뇌(또는 로고)를 픽셀 단위로 샘플링해 3D 파티클로 다시 세운다.
@@ -126,14 +127,6 @@ const METEOR_FRAG = /* glsl */ `
   }
 `;
 
-function loadImage(src: string) {
-  return new Promise<HTMLImageElement>((res, rej) => {
-    const im = new Image();
-    im.onload = () => res(im);
-    im.onerror = rej;
-    im.src = src;
-  });
-}
 
 /** 실루엣 안쪽까지의 거리(체스보드 거리 변환, 픽셀 단위) */
 function insideDistance(mask: Uint8Array, W: number, H: number) {
@@ -454,7 +447,7 @@ export default function BrainField({ className = '', src = SRC, mode = 'image', 
       el.classList.add('is-ready');
     };
 
-    Promise.all([loadImage(src), topSrc ? loadImage(topSrc) : Promise.resolve(null)]).then(([img, img2]) => {
+    Promise.all([loadGraphic(src), topSrc ? loadGraphic(topSrc) : Promise.resolve(null)]).then(([img, img2]) => {
       if (disposed) return;
       const A = sample(img, mode, grid, undefined, fit);
       halfW = 1; halfH = A.aspect;
@@ -516,7 +509,7 @@ export default function BrainField({ className = '', src = SRC, mode = 'image', 
         }
       }
       finish(new Float32Array(pos), new Float32Array(lum), new Float32Array(lum2), new Float32Array(vis));
-    });
+    }).catch(() => { /* 원본·저용량 모두 실패: 그 자리만 비워 둔다 */ });
 
     const clock = new THREE.Clock();
     let intro = reduced || !assemble ? 1 : 0;
