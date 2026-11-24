@@ -111,7 +111,8 @@
 .ab__title { font-size: clamp(3.5rem, 7.4vw, 7.5rem); font-weight: 700; letter-spacing: -0.05em; line-height: 1; }
 .ab__lead { max-width: 30em; margin-top: clamp(32px, 4vw, 56px); font-size: clamp(1.25rem, 2vw, 1.75rem); font-weight: 600; letter-spacing: -0.03em; line-height: 1.6; color: #e6e6e6; }
 .nl__title { font-size: clamp(2rem, 3.2vw, 3rem); font-weight: 700; letter-spacing: -0.045em; line-height: 1.08; text-transform: none; }
-.nl__no { font-size: 13px; font-weight: 600; color: var(--g2); padding-top: 6px; }
+/* 번호는 옆 헤드라인(.nl__t)과 같은 크기·굵기·줄높이 */
+.nl__no { font-size: clamp(1.5rem, 2.3vw, 2.125rem); font-weight: 700; letter-spacing: -0.03em; line-height: 1.2; color: var(--g2); padding-top: 0; }
 .nl__no::after { display: none; }
 .nl__t { font-weight: 700; }
 .nl__d { font-size: clamp(1rem, 1.25vw, 1.125rem); font-weight: 500; line-height: 1.85; color: #cfcfcf; max-width: 36em; }
